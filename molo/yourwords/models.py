@@ -6,9 +6,8 @@ class competition(models.Model):
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
     COMPETITION_STATUS_CHOICES = (
-            ('UC', 'Upcoming'),
-            ('CR', 'Currently Running'),
-            ('CL', 'Closed'),
+        ('U', 'Unpublished'),
+        ('P', 'Published')
     )
     competition_status = models.CharField(
         max_length=2,
