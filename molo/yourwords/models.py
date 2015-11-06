@@ -8,11 +8,13 @@ from wagtail.wagtailadmin.edit_handlers import (
 
 class Competition(Page):
     name = Page.CharField(max_length=128)
-    startDate = Page.DateTimeField(null=True, blank=True)
-    endDate = Page.DateTimeField(null=True, blank=True)
+    description = Page.TextField()
+    content = Page.TextField()
+    start_date = Page.DateTimeField(null=True, blank=True)
+    end_date = Page.DateTimeField(null=True, blank=True)
 
 
-class competition_entry(Page):
+class CompetitionEntry(Page):
     story_name = Page.CharField(max_length=128)
     story_text = Page.TextField()
     TERMS_OR_CONDITIONS_CHOICES = (
@@ -20,13 +22,13 @@ class competition_entry(Page):
         ('No', 'No')
     )
 
-    terms_or_conditions_approved = Page.CharField(
+    terms_or_conditions_approved = Page.BooleanField(
         choices=TERMS_OR_CONDITIONS_CHOICES)
     HIDE_REAL_NAME_CHOICES = (
         ('Yes', 'Yes'),
         ('No', 'No')
     )
-    hide_real_name = Page.charfield(choices=HIDE_REAL_NAME_CHOICES)
+    hide_real_name = Page.BooleanField(choices=HIDE_REAL_NAME_CHOICES)
 
 
 class wagtailCompetition(Page):
