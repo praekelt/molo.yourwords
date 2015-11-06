@@ -13,11 +13,11 @@ from molo.core.blocks import MarkDownBlock
 from molo.core.models import LanguagePage, SectionPage
 
 
-LanguagePage.subpage_types += ['yourwords.Competition']
-SectionPage.subpage_types += ['yourwords.Competition']
+LanguagePage.subpage_types += ['yourwords.YourWordsCompetition']
+SectionPage.subpage_types += ['yourwords.YourWordsCompetition']
 
 
-class Competition(Page):
+class YourWordsCompetition(Page):
     description = models.TextField(null=True, blank=True)
     image = models.ForeignKey(
         'wagtailimages.Image',
@@ -47,7 +47,7 @@ class Competition(Page):
         help_text=('Link to terms and conditions page')
     )
 
-Competition.content_panels = [
+YourWordsCompetition.content_panels = [
     FieldPanel('title', classname='full title'),
     FieldPanel('description'),
     ImageChooserPanel('image'),
@@ -57,11 +57,11 @@ Competition.content_panels = [
             FieldPanel('start_date'),
             FieldPanel('end_date'),
         ],
-        heading="Competition Settings",)
+        heading="Your Words Competition Settings",)
 ]
 
 
-class CompetitionEntry(Page):
+class YourWordsCompetitionEntry(Page):
     story_name = models.CharField(max_length=128)
     story_text = models.TextField()
     terms_or_conditions_approved = models.BooleanField()
