@@ -6,6 +6,14 @@ class Competition(Page):
     content = Page.TextField()
     start_date = Page.DateTimeField(null=True, blank=True)
     end_date = Page.DateTimeField(null=True, blank=True)
+    terms_and_conditions_link_page = Page.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=Page.SET_NULL,
+        related_name='+',
+        help_text=('Link to terms and conditions page')
+    )
 
 
 class CompetitionEntry(Page):
