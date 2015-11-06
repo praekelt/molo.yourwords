@@ -10,10 +10,11 @@ from wagtail.wagtailadmin.edit_handlers import (
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from molo.core.blocks import MarkDownBlock
-from molo.core.models import LanguagePage
+from molo.core.models import LanguagePage, SectionPage
 
 
 LanguagePage.subpage_types += ['yourwords.Competition']
+SectionPage.subpage_types += ['yourwords.Competition']
 
 
 class Competition(Page):
