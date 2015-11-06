@@ -2,7 +2,6 @@ from wagtail.wagtailcore.models import Page
 
 
 class Competition(Page):
-    name = Page.CharField(max_length=128)
     description = Page.TextField()
     content = Page.TextField()
     start_date = Page.DateTimeField(null=True, blank=True)
