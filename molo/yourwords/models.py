@@ -1,7 +1,7 @@
-from django.db import models
+from wagtail.wagtailcore.models import Page
 
 
-class competition(models.Model):
-    name = models.CharField(max_length=128)
-    start_date = models.DateTimeField(null=True, blank=True)
-    end_date = models.DateTimeField(null=True, blank=True)
+class competition(Page):
+    name = Page.CharField(max_length=128)
+    startDate = Page.DateTimeField(null=True, blank=True)
+    endDate = Page.DateTimeField(null=True, blank=True)
