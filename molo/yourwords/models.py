@@ -4,8 +4,16 @@ from django.db import models
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.wagtailadmin.edit_handlers import (
+    FieldPanel, StreamFieldPanel,
+    MultiFieldPanel)
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from molo.core.blocks import MarkDownBlock
+from molo.core.models import LanguagePage
+
+
+LanguagePage.subpage_types += ['yourwords.Competition']
 
 
 class Competition(Page):
@@ -37,6 +45,19 @@ class Competition(Page):
         related_name='+',
         help_text=('Link to terms and conditions page')
     )
+
+Competition.content_panels = [
+    FieldPanel('title', classname='full title'),
+    FieldPanel('description'),
+    ImageChooserPanel('image'),
+    StreamFieldPanel('content'),
+    MultiFieldPanel(
+        [
+            FieldPanel('start_date'),
+            FieldPanel('end_date'),
+        ],
+        heading="Competition Settings",)
+]
 
 
 class CompetitionEntry(Page):
