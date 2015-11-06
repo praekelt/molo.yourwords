@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Competition',
+            name='YourWordsCompetition',
             fields=[
                 ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('description', models.TextField(null=True, blank=True)),
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             bases=('wagtailcore.page',),
         ),
         migrations.CreateModel(
-            name='CompetitionEntry',
+            name='YourWordsCompetitionEntry',
             fields=[
                 ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('story_name', models.CharField(max_length=128)),
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
             bases=('wagtailcore.page',),
         ),
         migrations.AddField(
-            model_name='competition',
+            model_name='yourwordscompetition',
             name='terms_and_conditions_link_page',
             field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='wagtailcore.Page', help_text=b'Link to terms and conditions page', null=True),
         ),
