@@ -75,7 +75,7 @@ YourWordsCompetition.settings_panels = [
 ]
 
 
-class YourWordsCompetitionEntry(Page):
+class YourWordsCompetitionEntry(models.Model):
     story_name = models.CharField(max_length=128)
     story_text = models.TextField()
     terms_or_conditions_approved = models.BooleanField()

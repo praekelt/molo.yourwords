@@ -57,15 +57,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='YourWordsCompetitionEntry',
             fields=[
-                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('story_name', models.CharField(max_length=128)),
                 ('story_text', models.TextField()),
                 ('terms_or_conditions_approved', models.BooleanField()),
                 ('hide_real_name', models.BooleanField()),
             ],
-            options={
-                'abstract': False,
-            },
-            bases=('wagtailcore.page',),
         ),
     ]
