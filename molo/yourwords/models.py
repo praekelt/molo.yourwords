@@ -1,16 +1,17 @@
-from wagtail.wagtailcore.models import Page
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
+from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailadmin.edit_handlers import (
-    FieldPanel, StreamFieldPanel,
+    FieldPanel, StreamFieldPanel, FieldRowPanel,
     MultiFieldPanel)
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from molo.core.blocks import MarkDownBlock
-from molo.core.models import LanguagePage, SectionPage
+from molo.core.models import LanguagePage, SectionPage, ArticlePage
 
 
 LanguagePage.subpage_types += ['yourwords.YourWordsCompetition']
@@ -18,6 +19,7 @@ SectionPage.subpage_types += ['yourwords.YourWordsCompetition']
 
 
 class YourWordsCompetition(Page):
+    subpage_types = ['yourwords.TermsAndConditions', 'yourwords.ThankYou']
     description = models.TextField(null=True, blank=True)
     image = models.ForeignKey(
         'wagtailimages.Image',
@@ -38,14 +40,19 @@ class YourWordsCompetition(Page):
 
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
-    terms_and_conditions_link_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        help_text=('Link to terms and conditions page')
-    )
+
+    extra_style_hints = models.TextField(
+        default='',
+        null=True, blank=True,
+        help_text=_(
+            "Styling options that can be applied to this section "
+            "and all its descendants"))
+
+    def get_effective_extra_style_hints(self):
+            return self.extra_style_hints
+
+    def get_effective_image(self):
+        return self.image
 
 YourWordsCompetition.content_panels = [
     FieldPanel('title', classname='full title'),
@@ -60,9 +67,30 @@ YourWordsCompetition.content_panels = [
         heading="Your Words Competition Settings",)
 ]
 
+YourWordsCompetition.settings_panels = [
+    MultiFieldPanel(
+        [FieldRowPanel(
+            [FieldPanel('extra_style_hints')], classname="label-above")],
+        "Meta")
+]
 
-class YourWordsCompetitionEntry(Page):
+
+class YourWordsCompetitionEntry(models.Model):
     story_name = models.CharField(max_length=128)
     story_text = models.TextField()
     terms_or_conditions_approved = models.BooleanField()
     hide_real_name = models.BooleanField()
+
+
+class TermsAndConditions(ArticlePage):
+    subpage_types = []
+
+    def get_parent_page(self):
+        return YourWordsCompetition.objects.all().ancestor_of(self).last()
+
+
+class ThankYou(ArticlePage):
+    subpage_types = []
+
+    def get_parent_page(self):
+        return YourWordsCompetition.objects.all().ancestor_of(self).last()
