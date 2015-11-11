@@ -4,9 +4,9 @@ from django.contrib import admin
 
 
 def ConvertToArticle(model_admin, request, entry):
-    article = ArticlePage.objects.create(null, null)
-    article.title = entry.story_name
-    article.body = entry.story_text
+    root = request.site.root_page
+    article = ArticlePage(title=entry.story_name, body=entry.story_text)
+    root.add_child(instance=article)
 ConvertToArticle.short_description = "Convert competition entry to article"
 
 
