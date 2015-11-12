@@ -4,8 +4,10 @@
 {% block content %}
 
 <div class="icon">
-    {% image self.image width-320 as tmp_photo %}
-    <img src="{{ tmp_photo.url }}" alt="{{ self.image.title }}"/>
+  {% if self.get_parent_page.get_effective_image %}
+    {% image self.get_parent_page.get_effective_image width-320 as tmp_photo %}
+    <img src="{{ tmp_photo.url }}" alt="{{ self.get_parent_page.get_effective_image.title }}"/>
+  {% endif %}
 </div>
 
 <div class="block {{self.get_effective_extra_style_hints}}">
