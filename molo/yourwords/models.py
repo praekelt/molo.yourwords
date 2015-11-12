@@ -54,6 +54,13 @@ class YourWordsCompetition(Page):
     def get_effective_image(self):
         return self.image
 
+    def thank_you_page(self):
+        qs = ThankYou.objects.live().child_of(self)
+        if qs.exists():
+            return qs.last()
+        return None
+
+
 YourWordsCompetition.content_panels = [
     FieldPanel('title', classname='full title'),
     FieldPanel('description'),
