@@ -17,15 +17,15 @@
     <br>
     <form action="{% url 'molo.yourwords:competition_entry' %}" method="post">{% csrf_token %}
         <label>{% trans "Title of your story (max 60 characters)" %}</label>
-        {{ competition_entry_form.story_name }}
+        {{ form.story_name }}
         <label>{% trans "Tell us your story here" %}</label>
-        {{ competition_entry_form.story_text }}
+        {{ form.story_text }}
         <div >
-          {{ competition_entry_form.terms_or_conditions_approved }}
+          {{ form.terms_or_conditions_approved }}
           <label>{% trans "I accept the Terms and Conditions" %}</label>
         </div>
         <div >
-          {{ competition_entry_form.hide_real_name }}
+          {{ form.hide_real_name }}
           <label>{% trans "Share my story anonymously" %}</label>
         </div>
         <input type="submit" value="Share Your Story" />
