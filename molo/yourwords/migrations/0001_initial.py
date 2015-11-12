@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import models, migrations
 import molo.core.blocks
 import wagtail.wagtailcore.fields
 import wagtail.wagtailimages.blocks
@@ -62,6 +62,7 @@ class Migration(migrations.Migration):
                 ('story_text', models.TextField()),
                 ('terms_or_conditions_approved', models.BooleanField()),
                 ('hide_real_name', models.BooleanField()),
+                ('competition', models.ForeignKey(to='yourwords.YourWordsCompetition')),
             ],
         ),
     ]

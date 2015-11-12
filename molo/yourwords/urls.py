@@ -7,7 +7,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     '',
     url(
-        r'^entry/$',
+        r'^entry/(?P<competition_id>\d+)/$',
         views.CompetitionEntry.as_view(),
         name='competition_entry'),
     url(

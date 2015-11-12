@@ -10,7 +10,7 @@ from molo.yourwords.models import YourWordsCompetition
 
 class CompetitionEntry(CreateView):
     form_class = CompetitionEntryForm
-    template_name = 'yourwords/your_words_competition.html'
+    template_name = 'yourwords/your_words_competition_entry.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super(
@@ -21,6 +21,13 @@ class CompetitionEntry(CreateView):
         return reverse(
             'molo.yourwords:thank_you',
             args=[self.object.competition.id])
+
+    def form_valid(self, form):
+        competition_id = self.kwargs.get('competition_id')
+        competition = get_object_or_404(
+            YourWordsCompetition, pk=competition_id)
+        form.instance.competition = competition
+        return super(CompetitionEntry, self).form_valid(form)
 
 
 class CompetitionEntryView(FormView):

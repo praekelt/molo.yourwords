@@ -83,6 +83,7 @@ YourWordsCompetition.settings_panels = [
 
 
 class YourWordsCompetitionEntry(models.Model):
+    competition = models.ForeignKey(YourWordsCompetition)
     story_name = models.CharField(max_length=128)
     story_text = models.TextField()
     terms_or_conditions_approved = models.BooleanField()
