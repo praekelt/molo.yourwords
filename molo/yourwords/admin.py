@@ -1,12 +1,20 @@
-from molo.core.models import ArticlePage
+from molo.core.models import ArticlePage, LanguagePage
 from molo.yourwords.models import YourWordsCompetitionEntry
 from django.contrib import admin
 
 
 def ConvertToArticle(model_admin, request, entry):
-    root = request.site.root_page
+    english, is_created = LanguagePage.objects.get_or_create(code='en')
     article = ArticlePage(title=entry.story_name, body=entry.story_text)
-    root.add_child(instance=article)
+    article.save()
+    article.save_revision(
+        user=request.user,
+        submitted_for_moderation=False,
+    )
+    english.add_child(instance=article)
+    english.save()
+
+
 ConvertToArticle.short_description = "Convert competition entry to article"
 
 
