@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
 from django.core.urlresolvers import reverse
 
@@ -13,8 +13,12 @@ class CompetitionEntry(CreateView):
     template_name = 'yourwords/your_words_competition_entry.html'
 
     def get_context_data(self, *args, **kwargs):
+        competition_id = self.kwargs.get('competition_id')
         context = super(
             CompetitionEntry, self).get_context_data(*args, **kwargs)
+        competition = get_object_or_404(
+            YourWordsCompetition, pk=competition_id)
+        context.update({'competition': competition})
         return context
 
     def get_success_url(self):
@@ -28,15 +32,6 @@ class CompetitionEntry(CreateView):
             YourWordsCompetition, pk=competition_id)
         form.instance.competition = competition
         return super(CompetitionEntry, self).form_valid(form)
-
-
-class CompetitionEntryView(FormView):
-    template_name = 'yourwords/thank_you.html'
-    form_class = CompetitionEntryForm
-
-    def form_valid(self, form):
-
-        return super(CompetitionEntryView, self).form_valid(form)
 
 
 class ThankYouView(TemplateView):
