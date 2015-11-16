@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 
 
 class TestAdminActions(TestCase):
-    fixtures = ['molo/yourwords/tests/fixtures/test.json']
 
     def setUp(self):
         self.factory = RequestFactory()
