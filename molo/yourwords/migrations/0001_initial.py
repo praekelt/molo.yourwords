@@ -50,6 +50,7 @@ class Migration(migrations.Migration):
                 ('end_date', models.DateTimeField(null=True, blank=True)),
                 ('extra_style_hints', models.TextField(default=b'', help_text='Styling options that can be applied to this section and all its descendants', null=True, blank=True)),
                 ('image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='wagtailimages.Image', null=True)),
+                ('terms_and_conditions_link_page', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='wagtailcore.Page', help_text=b'Link to terms and conditions page', null=True)),
             ],
             options={
                 'abstract': False,
