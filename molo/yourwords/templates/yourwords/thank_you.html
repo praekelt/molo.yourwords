@@ -12,11 +12,15 @@
 
 <div class="block {{competition.thank_you_page.get_parent_page.get_effective_extra_style_hints}}">
     {% if competition.thank_you_page %}
-    <h3>{{competition.thank_you_page.title}}</h3>
-    <p>{{competition.thank_you_page.subtitle}}</p>
+      <h3>{{competition.thank_you_page.title}}</h3>
+      {% if competition.thank_you_page.subtitle %}
+        <p>{{competition.thank_you_page.subtitle}}</p>
+      {% else %}
+        <p>{% trans 'Thanks for submitting your story! You’ll find out soon if you’re a winner!' %}</p>
+      {% endif %}
     {% else %}
     <h3>{% trans 'Thank you!' %}</h3>
-    <p>{% trans 'You will be notified if you have won!' %}</p>
+    <p>{% trans 'Thanks for submitting your story! You’ll find out soon if you’re a winner!' %}</p>
     {% endif %}
 
   <a href="{{request.site.root_page.url}}" class="button inverted">{% trans "HOME" %}</a>
