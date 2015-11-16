@@ -15,22 +15,22 @@
   <h3>{{competition.title}}</h3>
   <div class="yourwords">
     <form method="post">{% csrf_token %}
-      
+
         {% if form.story_name.errors %}
-          <p class="errors">* {{form.story_name.errors|join:' '}}</p>
+          <p class="alert-error">* {{form.story_name.errors|join:' '}}</p>
         {% endif %}
         <label>{% trans "Title of your story (max 60 characters)" %}</label>
         {{ form.story_name }}
 
         {% if form.story_text.errors %}
-          <p class="errors" >* {{form.story_text.errors|join:' '}}</p>
+          <p class="alert-error" >* {{form.story_text.errors|join:' '}}</p>
         {% endif %}
         <label>{% trans "Tell us your story here" %}</label>
         {{ form.story_text }}
 
         <div>
           {% if form.terms_or_conditions_approved.errors %}
-          <p class="errors">* {{form.terms_or_conditions_approved.errors|join:' '}}</p>
+          <p class="alert-error">* {{form.terms_or_conditions_approved.errors|join:' '}}</p>
           {% endif %}
           {{ form.terms_or_conditions_approved }}
           <label>{% trans "I accept the Terms and Conditions" %}</label>
