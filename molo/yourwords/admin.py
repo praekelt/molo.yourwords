@@ -4,8 +4,6 @@ from molo.core.models import ArticlePage, LanguagePage
 from molo.yourwords.models import YourWordsCompetitionEntry
 from django.contrib import admin
 
-from wagtail.wagtailcore.utils import cautious_slugify
-
 
 def convert_to_article(model_admin, request, entry):
     english = LanguagePage.objects.get(code='en')
