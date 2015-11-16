@@ -5,6 +5,7 @@ from django.db import migrations, models
 import molo.core.blocks
 import wagtail.wagtailcore.fields
 import wagtail.wagtailimages.blocks
+from django.conf import settings
 import django.db.models.deletion
 import wagtail.wagtailcore.blocks
 
@@ -13,6 +14,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('core', '0018_auto_20150925_1554'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('wagtailimages', '0006_add_verbose_names'),
         ('wagtailcore', '0001_squashed_0016_change_page_url_path_to_text_field'),
     ]
@@ -63,6 +65,7 @@ class Migration(migrations.Migration):
                 ('terms_or_conditions_approved', models.BooleanField()),
                 ('hide_real_name', models.BooleanField()),
                 ('competition', models.ForeignKey(to='yourwords.YourWordsCompetition')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

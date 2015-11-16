@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore import blocks
@@ -84,6 +85,7 @@ YourWordsCompetition.settings_panels = [
 
 class YourWordsCompetitionEntry(models.Model):
     competition = models.ForeignKey(YourWordsCompetition)
+    user = models.ForeignKey('auth.User')
     story_name = models.CharField(max_length=128)
     story_text = models.TextField()
     terms_or_conditions_approved = models.BooleanField()

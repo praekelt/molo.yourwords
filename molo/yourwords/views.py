@@ -31,6 +31,7 @@ class CompetitionEntry(CreateView):
         competition = get_object_or_404(
             YourWordsCompetition, pk=competition_id)
         form.instance.competition = competition
+        form.instance.user = self.request.user
         return super(CompetitionEntry, self).form_valid(form)
 
 
