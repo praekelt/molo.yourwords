@@ -22,4 +22,5 @@ class ArticleAdmin(admin.ModelAdmin):
     ordering = ['title']
     actions = [convert_to_article]
 
-admin.site.register(YourWordsCompetitionEntry, ArticleAdmin)
+admin.site.register(YourWordsCompetitionEntry)
+# admin.site.register(ArticleAdmin)
