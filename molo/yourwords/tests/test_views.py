@@ -119,3 +119,12 @@ class TestYourWordsViewsTestCase(TestCase):
                 'terms_or_conditions_approved': 'true'})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(YourWordsCompetitionEntry.objects.all().count(), 1)
+
+    def test_yourwords_hide_real_name(self):
+        pass
+
+    def test_yourwords_thank_you_page(self):
+        pass
+
+    def test_yourwords_terms_and_conditions(self):
+        pass
