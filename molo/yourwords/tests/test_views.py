@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 from molo.core.models import LanguagePage, Main
 from molo.yourwords.models import (
-    YourWordsCompetition, YourWordsCompetitionEntry, TermsAndConditions)
+    YourWordsCompetition, YourWordsCompetitionEntry)
 from wagtail.wagtailcore.models import Site, Page
 
 
@@ -149,23 +149,3 @@ class TestYourWordsViewsTestCase(TestCase):
         self.assertEqual(
             response['Location'],
             'http://testserver/yourwords/thankyou/test-competition/')
-
-    # def test_yourwords_terms_and_conditions(self):
-    #
-    #     comp = YourWordsCompetition(
-    #         title='Test Competition',
-    #         description='This is the description',
-    #         slug='test-competition',)
-    #     self.english.add_child(instance=comp)
-    #     comp.save_revision().publish()
-    #
-    #     tc = TermsAndConditions(
-    #         title='terms and conditions',
-    #         slug='terms-and-conditions')
-    #     comp.add_child(instance=tc)
-    #     tc.save_revision().publish()
-    #
-    #     client = Client()
-    #
-    #     response = client.get('/english/test-competition/')
-    #     self.assertContains(response, 'terms and conditions')
