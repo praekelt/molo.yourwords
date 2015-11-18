@@ -13,23 +13,21 @@ class CompetitionEntry(CreateView):
     template_name = 'yourwords/your_words_competition_entry.html'
 
     def get_context_data(self, *args, **kwargs):
-        competition_id = self.kwargs.get('competition_id')
         context = super(
             CompetitionEntry, self).get_context_data(*args, **kwargs)
         competition = get_object_or_404(
-            YourWordsCompetition, pk=competition_id)
+            YourWordsCompetition, slug=self.kwargs.get('slug'))
         context.update({'competition': competition})
         return context
 
     def get_success_url(self):
         return reverse(
             'molo.yourwords:thank_you',
-            args=[self.object.competition.id])
+            args=[self.object.competition.slug])
 
     def form_valid(self, form):
-        competition_id = self.kwargs.get('competition_id')
         competition = get_object_or_404(
-            YourWordsCompetition, pk=competition_id)
+            YourWordsCompetition, slug=self.kwargs.get('slug'))
         form.instance.competition = competition
         form.instance.user = self.request.user
         return super(CompetitionEntry, self).form_valid(form)
@@ -41,6 +39,6 @@ class ThankYouView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ThankYouView, self).get_context_data(*args, **kwargs)
         competition = get_object_or_404(
-            YourWordsCompetition, id=kwargs.get('competition_id'))
+            YourWordsCompetition, slug=self.kwargs.get('slug'))
         context.update({'competition': competition})
         return context

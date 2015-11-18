@@ -7,12 +7,12 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = patterns(
     '',
     url(
-        r'^entry/(?P<competition_id>\d+)/$',
+        r'^entry/(?P<slug>[\w-]+)/$',
         login_required(views.CompetitionEntry.as_view()),
         name='competition_entry'),
 
     url(
-        r'^thankyou/(?P<competition_id>\d+)/$',
+        r'^thankyou/(?P<slug>[\w-]+)/$',
         login_required(views.ThankYouView.as_view()),
         name='thank_you'),
 )
