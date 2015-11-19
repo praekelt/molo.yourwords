@@ -1,7 +1,7 @@
 from molo.core.models import ArticlePage, LanguagePage
 from molo.yourwords.models import (
     YourWordsCompetitionEntry, YourWordsCompetition)
-from molo.yourwords.admin import convert_to_article, ArticleAdmin
+from molo.yourwords.admin import convert_to_article, YourWordsCompetitionEntryAdmin
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 
@@ -36,6 +36,7 @@ class TestAdminActions(TestCase):
         )
         request = self.factory.get('/home/english/')
         request.user = self.user
-        convert_to_article(ArticleAdmin, request, entry)
+        convert_to_article(YourWordsCompetitionEntryAdmin, request, [entry])
         article = ArticlePage.objects.get(title='test')
-        self.assertEquals(article.title, entry.story_name)
+        self.assertEquals(entry.story_name, article.title)
+        self.assertEquals(entry.url, 'sefsgs')
