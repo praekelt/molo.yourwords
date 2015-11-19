@@ -31,7 +31,8 @@ def convert_to_article(request, entry_id):
 
         entry.article_page = article
         entry.save()
-    return redirect('/admin/pages/%d/move/' % article.id)
+        return redirect('/admin/pages/%d/move/' % article.id)
+    return redirect('/admin/pages/%d/edit/' % entry.article_page.id)
 
 
 class YourWordsCompetitionEntryForm(forms.ModelForm):
