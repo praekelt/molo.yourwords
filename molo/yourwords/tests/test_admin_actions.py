@@ -40,4 +40,3 @@ class TestAdminActions(TestCase):
         convert_to_article(YourWordsCompetitionEntryAdmin, request, [entry])
         article = ArticlePage.objects.get(title='test')
         self.assertEquals(entry.story_name, article.title)
-        self.assertEquals(entry.url, 'sefsgs')
