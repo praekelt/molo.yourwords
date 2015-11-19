@@ -89,8 +89,8 @@ YourWordsCompetition.settings_panels = [
 
 class YourWordsCompetitionEntry(models.Model):
     competition = models.ForeignKey(YourWordsCompetition)
-    submission_date = models.DateField(null=True,
-                                       blank=True, auto_now_add=True)
+    submission_date = models.DateField(null=True, blank=True,
+                                       auto_now_add=True)
     user = models.ForeignKey('auth.User')
     story_name = models.CharField(max_length=128)
     story_text = models.TextField()
