@@ -25,8 +25,8 @@ class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
 
 class YourWordsCompetitionAdmin(admin.ModelAdmin):
     list_display = ['title', 'start_date', 'end_date', 'live']
-    list_filter = ['title', 'start_date', 'end_date', 'description']
-    search_fields = ['title']
+    list_filter = ['title', 'start_date', 'end_date']
+    search_fields = ['title', 'content', 'description']
 
 
 admin.site.register(YourWordsCompetitionEntry, YourWordsCompetitionEntryAdmin)
