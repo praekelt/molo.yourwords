@@ -78,10 +78,23 @@ class TestAdminActions(TestCase):
         )
         client = Client()
         client.login(username='tester', password='tester')
-        client.get(
+        response = client.get(
             '/django-admin/yourwords/yourwordscompetitionentry/%d/convert/' %
             entry.id)
         article = ArticlePage.objects.get(title='test')
         entry = YourWordsCompetitionEntry.objects.get(pk=entry.pk)
         self.assertEquals(entry.story_name, article.title)
         self.assertEquals(entry.article_page, article)
+        self.assertEquals(ArticlePage.objects.all().count(), 1)
+        self.assertEquals(
+            response['Location'],
+            'http://testserver/admin/pages/5/move/')
+
+        # second time it should redirect to the edit page
+        response = client.get(
+            '/django-admin/yourwords/yourwordscompetitionentry/%d/convert/' %
+            entry.id)
+        self.assertEquals(
+            response['Location'],
+            'http://testserver/admin/pages/5/edit/')
+        self.assertEquals(ArticlePage.objects.all().count(), 1)
