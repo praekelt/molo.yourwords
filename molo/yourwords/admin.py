@@ -24,7 +24,8 @@ convert_to_article.short_description = "Convert competition entry to article"
 class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
     list_display = ['story_name', 'truncate_text', 'user', 'hide_real_name',
                     'submission_date', 'is_read', 'is_shortlisted', 'is_winner']
-    list_filter = ['competition__slug', 'is_read', 'is_shortlisted', 'is_winner']
+    list_filter = ['competition__slug', 'is_read', 'is_shortlisted',
+                   'is_winner']
     list_editable = ['is_read', 'is_shortlisted', 'is_winner']
 
     def truncate_text(self, obj, *args, **kwargs):
