@@ -95,6 +95,9 @@ class YourWordsCompetitionEntry(models.Model):
     story_text = models.TextField()
     terms_or_conditions_approved = models.BooleanField()
     hide_real_name = models.BooleanField()
+    is_read = models.BooleanField(default=False)
+    is_shortlisted = models.BooleanField(default=False)
+    is_winner = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'YourWords Competition Entry'
