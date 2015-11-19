@@ -29,13 +29,14 @@ class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
 
 class YourWordsCompetitionAdmin(admin.ModelAdmin):
     list_display = ['entries', 'start_date', 'end_date', 'live']
-    list_filter = ['title', 'start_date', 'end_date', 'description']
+    list_filter = ['title', 'start_date', 'end_date']
     search_fields = ['title', 'content', 'description']
 
     def entries(self, obj, *args, **kwargs):
         url = reverse('admin:yourwords_yourwordscompetitionentry_changelist')
         return '<a href="%s?competition__slug=%s">%s</a>' % (
             url, obj.slug, obj)
+
     entries.allow_tags = True
     entries.short_description = 'Title'
 
