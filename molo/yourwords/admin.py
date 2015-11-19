@@ -1,26 +1,33 @@
 import json
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import admin
+from django.conf.urls import patterns
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import truncatechars
+from django.shortcuts import get_object_or_404, redirect
 from django import forms
 
-from molo.core.models import ArticlePage, LanguagePage
+from wagtail.wagtailcore.utils import cautious_slugify
+
+from molo.core.models import ArticlePage, Main
 from molo.yourwords.models import (
     YourWordsCompetitionEntry, YourWordsCompetition)
 
 
-def convert_to_article(model_admin, request, entry):
-    [entry] = entry
-    english = LanguagePage.objects.get(code='en')
+@staff_member_required
+def convert_to_article(request, entry_id):
+    entry = get_object_or_404(YourWordsCompetitionEntry, pk=entry_id)
+    main = Main.objects.first()
     article = ArticlePage(
         title=entry.story_name,
-        body=json.dumps([{"type": "paragraph", "value": entry.story_text}]))
-    english.add_child(instance=article)
+        slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
+        body=json.dumps([{"type": "paragraph", "value": entry.story_text}])
+    )
+    main.add_child(instance=article)
     article.save_revision()
-
-
-convert_to_article.short_description = "Convert competition entry to article"
+    article.unpublish()
+    return redirect('/admin/pages/%d/move/' % article.id)
 
 
 class YourWordsCompetitionEntryForm(forms.ModelForm):
@@ -34,7 +41,7 @@ class YourWordsCompetitionEntryForm(forms.ModelForm):
 class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
     list_display = ['story_name', 'truncate_text', 'user', 'hide_real_name',
                     'submission_date', 'is_read', 'is_shortlisted',
-                    'is_winner']
+                    'is_winner', '_convert']
     list_filter = ['competition__slug', 'is_read', 'is_shortlisted',
                    'is_winner', 'submission_date']
     list_editable = ['is_read', 'is_shortlisted', 'is_winner']
@@ -46,7 +53,21 @@ class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
     def truncate_text(self, obj, *args, **kwargs):
         return truncatechars(obj.story_text, 30)
 
-    actions = [convert_to_article]
+    def get_urls(self):
+        urls = super(YourWordsCompetitionEntryAdmin, self).get_urls()
+        entry_urls = patterns(
+            '', (r'^(?P<entry_id>\d+)/convert/$', convert_to_article)
+        )
+        return entry_urls + urls
+
+    def _convert(self, obj, *args, **kwargs):
+        return (
+            '<a href="%d/convert/" class="addlink">Convert to article</a>' %
+            obj.id
+        )
+
+    _convert.allow_tags = True
+    _convert.short_description = 'Title'
 
 
 class YourWordsCompetitionAdmin(admin.ModelAdmin):
