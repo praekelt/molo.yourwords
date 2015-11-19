@@ -3,7 +3,7 @@
 
 {% block content %}
 
-
+{% if competitions %}
 <h2 class="list-header">{% trans "Competition" %}</h2>
 {% for competition in competitions %}
 <div class="block {{competition.get_effective_extra_style_hints}}">
@@ -26,5 +26,6 @@
   <br>
   {% endfor %}
 </div>
+{% endif %}
 
 {% endblock %}
