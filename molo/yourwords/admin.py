@@ -18,15 +18,19 @@ from molo.yourwords.models import (
 @staff_member_required
 def convert_to_article(request, entry_id):
     entry = get_object_or_404(YourWordsCompetitionEntry, pk=entry_id)
-    main = Main.objects.first()
-    article = ArticlePage(
-        title=entry.story_name,
-        slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
-        body=json.dumps([{"type": "paragraph", "value": entry.story_text}])
-    )
-    main.add_child(instance=article)
-    article.save_revision()
-    article.unpublish()
+    if not entry.article_page:
+        main = Main.objects.first()
+        article = ArticlePage(
+            title=entry.story_name,
+            slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
+            body=json.dumps([{"type": "paragraph", "value": entry.story_text}])
+        )
+        main.add_child(instance=article)
+        article.save_revision()
+        article.unpublish()
+
+        entry.article_page = article
+        entry.save()
     return redirect('/admin/pages/%d/move/' % article.id)
 
 
@@ -61,13 +65,16 @@ class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
         return entry_urls + urls
 
     def _convert(self, obj, *args, **kwargs):
+        if obj.article_page:
+            return (
+                '<a href="/admin/pages/%d/edit/">Article Page</a>' %
+                obj.article_page.id)
         return (
-            '<a href="%d/convert/" class="addlink">Convert to article</a>' %
-            obj.id
-        )
+            ' <a href="%d/convert/" class="addlink">Convert to article</a>' %
+            obj.id)
 
     _convert.allow_tags = True
-    _convert.short_description = 'Title'
+    _convert.short_description = ''
 
 
 class YourWordsCompetitionAdmin(admin.ModelAdmin):
