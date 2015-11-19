@@ -21,7 +21,8 @@ convert_to_article.short_description = "Convert competition entry to article"
 
 
 class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
-    list_display = ['competition', 'story_name', 'user', 'story_text']
+    list_display = ['story_name', 'story_text', 'user',
+                    'submission_date']
     list_filter = ['competition__slug']
     actions = [convert_to_article]
 
