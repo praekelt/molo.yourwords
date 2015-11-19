@@ -1,7 +1,8 @@
 from molo.core.models import ArticlePage, LanguagePage
 from molo.yourwords.models import (
     YourWordsCompetitionEntry, YourWordsCompetition)
-from molo.yourwords.admin import convert_to_article, YourWordsCompetitionEntryAdmin
+from molo.yourwords.admin import (
+    convert_to_article, YourWordsCompetitionEntryAdmin)
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 
