@@ -7,12 +7,27 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import truncatechars
 from django.shortcuts import get_object_or_404, redirect
 from django import forms
+import csv
+from django.http import HttpResponse
 
 from wagtail.wagtailcore.utils import cautious_slugify
 
 from molo.core.models import ArticlePage, Main
 from molo.yourwords.models import (
     YourWordsCompetitionEntry, YourWordsCompetition)
+
+
+def download_as_csv(YourWordsCompetitionEntryAdmin, request, queryset):
+    opts = queryset.model._meta
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;filename=export.csv'
+    writer = csv.writer(response)
+    field_names = [field.name for field in opts.fields]
+    writer.writerow(field_names)
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    return response
+download_as_csv.short_description = "Download selected as csv"
 
 
 @staff_member_required
@@ -64,6 +79,7 @@ class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
     form = YourWordsCompetitionEntryForm
     readonly_fields = ('competition', 'story_name', 'story_text', 'user',
                        'hide_real_name', 'submission_date')
+    actions = [download_as_csv]
 
     def truncate_text(self, obj, *args, **kwargs):
         return truncatechars(obj.story_text, 30)
