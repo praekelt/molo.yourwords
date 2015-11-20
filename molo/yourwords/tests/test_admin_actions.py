@@ -1,6 +1,8 @@
 from molo.core.models import LanguagePage, Main, ArticlePage
 from molo.yourwords.models import (
     YourWordsCompetitionEntry, YourWordsCompetition)
+from molo.yourwords.admin import (
+    download_as_csv, YourWordsCompetitionEntryAdmin)
 from django.test import TestCase, RequestFactory
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
@@ -60,6 +62,36 @@ class TestAdminActions(TestCase):
         Site.objects.all().delete()
         Site.objects.create(
             hostname='localhost', root_page=main, is_default_site=True)
+
+    def test_download_as_csv(self):
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description')
+        self.english.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        YourWordsCompetitionEntry.objects.create(
+            competition=comp,
+            user=self.user,
+            story_name='test',
+            story_text='test body',
+            terms_or_conditions_approved=True,
+            hide_real_name=True
+        )
+        client = Client()
+        client.login(username='tester', password='tester')
+        response = download_as_csv(YourWordsCompetitionEntryAdmin,
+                                   None,
+                                   YourWordsCompetitionEntry.objects.all())
+        expected_output = ('Content-Type: text/csv\r\nContent-Disposition:'
+                           ' attachment;filename=export.csv\r\n\r\nid,'
+                           'competition,submission_date,user,story_name,'
+                           'story_text,terms_or_conditions_approved,'
+                           'hide_real_name,is_read,is_shortlisted,'
+                           'is_winner,article_page\r\n1,Test Competition,'
+                           '2015-11-20,tester,test,test body,'
+                           'True,True,False,False,False,\r\n')
+        self.assertEquals(str(response), expected_output)
 
     def test_convert_to_article(self):
         comp = YourWordsCompetition(
