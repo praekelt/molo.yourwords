@@ -17,13 +17,23 @@ from molo.yourwords.models import (
 
 @staff_member_required
 def convert_to_article(request, entry_id):
+    def get_entry_author(entry):
+        written_by_user = 'Written by: %s' % entry.user.username
+        written_by_anon = 'Written by: Anonymous'
+        if entry.hide_real_name:
+            return written_by_anon
+        return written_by_user
+
     entry = get_object_or_404(YourWordsCompetitionEntry, pk=entry_id)
     if not entry.article_page:
         main = Main.objects.first()
         article = ArticlePage(
             title=entry.story_name,
             slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
-            body=json.dumps([{"type": "paragraph", "value": entry.story_text}])
+            body=json.dumps([{
+                "type": "paragraph", "value": get_entry_author(entry),
+                "type": "paragraph", "value": entry.story_text,
+            }])
         )
         main.add_child(instance=article)
         article.save_revision()
