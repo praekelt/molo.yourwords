@@ -70,7 +70,7 @@ class TestAdminActions(TestCase):
         self.english.add_child(instance=comp)
         comp.save_revision().publish()
 
-        entry = YourWordsCompetitionEntry.objects.create(
+        YourWordsCompetitionEntry.objects.create(
             competition=comp,
             user=self.user,
             story_name='test',
