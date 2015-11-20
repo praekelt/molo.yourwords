@@ -61,6 +61,10 @@ class YourWordsCompetition(Page):
             return qs.last()
         return None
 
+    class Meta:
+        verbose_name = 'YourWords Competition'
+        verbose_name_plural = 'YourWords Competitions'
+
 
 YourWordsCompetition.content_panels = [
     FieldPanel('title', classname='full title'),
@@ -92,6 +96,22 @@ class YourWordsCompetitionEntry(models.Model):
     story_text = models.TextField()
     terms_or_conditions_approved = models.BooleanField()
     hide_real_name = models.BooleanField()
+    is_read = models.BooleanField(default=False)
+    is_shortlisted = models.BooleanField(default=False)
+    is_winner = models.BooleanField(default=False)
+
+    article_page = models.ForeignKey(
+        'core.ArticlePage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text=_('Page to which the entry was converted to')
+    )
+
+    class Meta:
+        verbose_name = 'YourWords Competition Entry'
+        verbose_name_plural = 'YourWords Competition Entries'
 
 
 class TermsAndConditions(ArticlePage):
