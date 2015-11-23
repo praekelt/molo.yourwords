@@ -117,7 +117,7 @@ class YourWordsCompetitionAdmin(admin.ModelAdmin):
 
     def status(self, obj, *args, **kwargs):
         if obj.live:
-            return 'First published on ' + str(obj.first_published_at)
+            return 'First published on ' + str(obj.first_published_at.date())
         return 'Unpublished'
 
     def entries(self, obj, *args, **kwargs):
