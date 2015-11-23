@@ -10,6 +10,7 @@ from django.test.client import Client
 from wagtail.wagtailcore.models import Site, Page
 import datetime
 
+
 class TestAdminActions(TestCase):
 
     def setUp(self):
