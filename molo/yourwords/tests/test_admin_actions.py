@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.test.client import Client
 from wagtail.wagtailcore.models import Site, Page
+import datetime
 
 
 class TestAdminActions(TestCase):
@@ -83,13 +84,14 @@ class TestAdminActions(TestCase):
         response = download_as_csv(YourWordsCompetitionEntryAdmin,
                                    None,
                                    YourWordsCompetitionEntry.objects.all())
+        date = str(datetime.datetime.now().date())
         expected_output = ('Content-Type: text/csv\r\nContent-Disposition:'
                            ' attachment;filename=export.csv\r\n\r\nid,'
                            'competition,submission_date,user,story_name,'
                            'story_text,terms_or_conditions_approved,'
                            'hide_real_name,is_read,is_shortlisted,'
                            'is_winner,article_page\r\n1,Test Competition,'
-                           '2015-11-20,tester,test,test body,'
+                           + date + ',tester,test,test body,'
                            'True,True,False,False,False,\r\n')
         self.assertEquals(str(response), expected_output)
 
