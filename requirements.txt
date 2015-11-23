@@ -1,0 +1,2 @@
+molo.core
+django-compressor<1.6
