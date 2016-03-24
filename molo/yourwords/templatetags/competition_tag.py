@@ -11,7 +11,13 @@ register = template.Library()
 )
 def your_words_competition(context, page=None):
     context = copy(context)
+
+    if page:
+        competition = YourWordsCompetition.objects.live().child_of(page)
+    else:
+        competition = None
+
     context.update({
-        'competitions': YourWordsCompetition.objects.live().child_of(page)
+        'competitions': competition
     })
     return context
