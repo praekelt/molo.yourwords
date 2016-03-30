@@ -17,13 +17,9 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
     def setUp(self):
         self.factory = RequestFactory()
         self.user = self.login()
-
         self.mk_main()
-
         # Creates Main language
-        self.english = SiteLanguage.objects.create(
-            locale='en',
-        )
+        self.english = SiteLanguage.objects.create(locale='en')
 
     def test_download_as_csv(self):
         comp = YourWordsCompetition(

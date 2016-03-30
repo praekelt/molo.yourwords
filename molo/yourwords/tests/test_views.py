@@ -13,11 +13,8 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
     def setUp(self):
         self.user = self.login()
         self.mk_main()
-
         # Creates Main language
-        self.english = SiteLanguage.objects.create(
-            locale='en',
-        )
+        self.english = SiteLanguage.objects.create(locale='en')
 
     def test_yourwords_competition_page(self):
         client = Client()
