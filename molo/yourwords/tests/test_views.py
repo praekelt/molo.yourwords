@@ -15,6 +15,8 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.mk_main()
         # Creates Main language
         self.english = SiteLanguage.objects.create(locale='en')
+        # Creates Child language
+        self.english = SiteLanguage.objects.create(locale='fr')
 
     def test_yourwords_competition_page(self):
         client = Client()
@@ -99,7 +101,31 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
                 'story_name': 'This is a story',
                 'story_text': 'The text',
                 'terms_or_conditions_approved': 'true'})
-
         self.assertEqual(
             response['Location'],
             'http://testserver/yourwords/thankyou/test-competition/')
+
+    def test_translated_yourwords_competition_page_exists(self):
+        client = Client()
+        client.login(username='superuser', password='pass')
+
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description',
+            slug='test-competition')
+        self.main.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        self.client.post(reverse(
+            'add_translation', args=[comp.id, 'fr']))
+        page = YourWordsCompetition.objects.get(
+            slug='french-translation-of-test-competition')
+        page.save_revision().publish()
+
+        response = self.client.get(reverse(
+            'wagtailadmin_explore', args=[self.main.id]))
+        page = YourWordsCompetition.objects.get(
+            slug='french-translation-of-test-competition')
+        self.assertContains(response,
+                            '<a href="/admin/pages/%s/edit/"'
+                            % page.id)

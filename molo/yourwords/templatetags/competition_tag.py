@@ -38,4 +38,7 @@ def load_thank_you_page_for_competition(context, competition):
     if not locale:
         return qs
 
-    return [a.get_translation_for(locale) or a for a in qs]
+    if qs:
+        return [a.get_translation_for(locale) or a for a in qs]
+    else:
+        return []
