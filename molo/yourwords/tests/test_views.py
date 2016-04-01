@@ -129,3 +129,38 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.assertContains(response,
                             '<a href="/admin/pages/%s/edit/"'
                             % page.id)
+
+    def test_translated_competition_entry_stored_against_the_main_lang(self):
+        client = Client()
+        client.login(username='superuser', password='pass')
+
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description',
+            slug='test-competition')
+        self.main.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        self.client.post(reverse(
+            'add_translation', args=[comp.id, 'fr']))
+        page = YourWordsCompetition.objects.get(
+            slug='french-translation-of-test-competition')
+        page.save_revision().publish()
+
+        YourWordsCompetitionEntry.objects.create(
+            competition=page,
+            user=self.user,
+            story_name='this is a french story',
+            story_text='test body',
+            terms_or_conditions_approved=True,
+            hide_real_name=True
+        )
+        response = client.get(
+            '/django-admin/yourwords/'
+            'yourwordscompetitionentry/?competition__slug=%s' % comp.slug)
+        self.assertContains(response, 'this is a french story')
+
+        response = client.get(
+            '/django-admin/yourwords/'
+            'yourwordscompetitionentry/?competition__slug=%s' % page.slug)
+        self.assertNotContains(response, 'this is a french story')
