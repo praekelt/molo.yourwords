@@ -134,33 +134,25 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         client = Client()
         client.login(username='superuser', password='pass')
 
-        comp = YourWordsCompetition(
+        en_comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.main.add_child(instance=comp)
-        comp.save_revision().publish()
+        self.main.add_child(instance=en_comp)
+        en_comp.save_revision().publish()
 
         self.client.post(reverse(
-            'add_translation', args=[comp.id, 'fr']))
-        page = YourWordsCompetition.objects.get(
+            'add_translation', args=[en_comp.id, 'fr']))
+        fr_comp = YourWordsCompetition.objects.get(
             slug='french-translation-of-test-competition')
-        page.save_revision().publish()
+        fr_comp.save_revision().publish()
 
-        YourWordsCompetitionEntry.objects.create(
-            competition=page,
-            user=self.user,
-            story_name='this is a french story',
-            story_text='test body',
-            terms_or_conditions_approved=True,
-            hide_real_name=True
-        )
-        response = client.get(
-            '/django-admin/yourwords/'
-            'yourwordscompetitionentry/?competition__slug=%s' % comp.slug)
-        self.assertContains(response, 'this is a french story')
+        client.post(
+            reverse('molo.yourwords:competition_entry', args=[fr_comp.slug]), {
+                'story_name': 'this is a french story',
+                'story_text': 'The text',
+                'terms_or_conditions_approved': 'true'})
 
-        response = client.get(
-            '/django-admin/yourwords/'
-            'yourwordscompetitionentry/?competition__slug=%s' % page.slug)
-        self.assertNotContains(response, 'this is a french story')
+        entry = YourWordsCompetitionEntry.objects.all().first()
+        self.assertEqual(entry.story_name, 'this is a french story')
+        self.assertEqual(entry.competition.id, en_comp.id)
