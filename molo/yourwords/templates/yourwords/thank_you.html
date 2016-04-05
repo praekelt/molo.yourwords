@@ -19,8 +19,27 @@
       <h3>{{page.title}}</h3>
       {% if page.subtitle %}
         <p>{{page.subtitle}}</p>
-      {% else %}
-        <p>{% trans 'Thanks for submitting your story! You’ll find out soon if you’re a winner!' %}</p>
+      {% endif %}
+      {% if page.body %}
+        {% for block in page.body %}
+          {% if block.block_type == 'heading' %}
+              <h1>{{ block.value }}</h1>
+          {% else %}
+          {% if block.block_type == 'image' %}
+            {% image block.value width-240 %}
+          {% else %}
+          {% if block.block_type == 'numbered_list' %}
+            <ol>
+            {% for item in block.value %}
+              <li>{{item}}</li>
+            {% endfor %}
+            </ol>
+          {% else %}
+              {{ block }}
+          {% endif %}
+          {% endif %}
+          {% endif %}
+        {% endfor %}
       {% endif %}
     {% endfor %}
     {% else %}
