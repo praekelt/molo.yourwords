@@ -1,93 +1,49 @@
-from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
 
-from molo.core.models import LanguagePage, Main
+from molo.core.tests.base import MoloTestCaseMixin
+from molo.core.models import SiteLanguage
 from molo.yourwords.models import (
     YourWordsCompetition, YourWordsCompetitionEntry)
-from wagtail.wagtailcore.models import Site, Page
 
 
-class TestYourWordsViewsTestCase(TestCase):
+class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            username='tester',
-            email='tester@example.com',
-            password='tester')
-
-        # Create page content type
-        page_content_type, created = ContentType.objects.get_or_create(
-            model='page',
-            app_label='wagtailcore'
-        )
-
-        # Create root page
-        Page.objects.create(
-            title="Root",
-            slug='root',
-            content_type=page_content_type,
-            path='0001',
-            depth=1,
-            numchild=1,
-            url_path='/',
-        )
-
-        main_content_type, created = ContentType.objects.get_or_create(
-            model='main', app_label='core')
-
-        # Create a new homepage
-        main = Main.objects.create(
-            title="Main",
-            slug='main',
-            content_type=main_content_type,
-            path='00010001',
-            depth=2,
-            numchild=0,
-            url_path='/home/',
-        )
-        main.save_revision().publish()
-
-        self.english = LanguagePage(
-            title='English',
-            code='en',
-            slug='english')
-        main.add_child(instance=self.english)
-        self.english.save_revision().publish()
-
-        # Create a site with the new homepage set as the root
-        Site.objects.all().delete()
-        Site.objects.create(
-            hostname='localhost', root_page=main, is_default_site=True)
+        self.user = self.login()
+        self.mk_main()
+        # Creates Main language
+        self.english = SiteLanguage.objects.create(locale='en')
+        # Creates Child language
+        self.english = SiteLanguage.objects.create(locale='fr')
 
     def test_yourwords_competition_page(self):
         client = Client()
-        client.login(username='tester', password='tester')
+        client.login(username='superuser', password='pass')
 
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.english.add_child(instance=comp)
+        self.main.add_child(instance=comp)
         comp.save_revision().publish()
 
         comp = YourWordsCompetition.objects.get(slug='test-competition')
 
-        response = client.get('/english/test-competition/')
+        response = client.get('/test-competition/')
         self.assertContains(response, 'Test Competition')
         self.assertContains(response, 'This is the description')
 
     def test_yourwords_validation_for_fields(self):
         client = Client()
-        client.login(username='tester', password='tester')
+        client.login(username='superuser', password='pass')
 
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.english.add_child(instance=comp)
+        self.main.add_child(instance=comp)
         comp.save_revision().publish()
 
         comp = YourWordsCompetition.objects.get(slug='test-competition')
@@ -131,13 +87,13 @@ class TestYourWordsViewsTestCase(TestCase):
 
     def test_yourwords_thank_you_page(self):
         client = Client()
-        client.login(username='tester', password='tester')
+        client.login(username='superuser', password='pass')
 
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.english.add_child(instance=comp)
+        self.main.add_child(instance=comp)
         comp.save_revision().publish()
 
         response = client.post(
@@ -145,7 +101,58 @@ class TestYourWordsViewsTestCase(TestCase):
                 'story_name': 'This is a story',
                 'story_text': 'The text',
                 'terms_or_conditions_approved': 'true'})
-
         self.assertEqual(
             response['Location'],
             'http://testserver/yourwords/thankyou/test-competition/')
+
+    def test_translated_yourwords_competition_page_exists(self):
+        client = Client()
+        client.login(username='superuser', password='pass')
+
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description',
+            slug='test-competition')
+        self.main.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        self.client.post(reverse(
+            'add_translation', args=[comp.id, 'fr']))
+        page = YourWordsCompetition.objects.get(
+            slug='french-translation-of-test-competition')
+        page.save_revision().publish()
+
+        response = self.client.get(reverse(
+            'wagtailadmin_explore', args=[self.main.id]))
+        page = YourWordsCompetition.objects.get(
+            slug='french-translation-of-test-competition')
+        self.assertContains(response,
+                            '<a href="/admin/pages/%s/edit/"'
+                            % page.id)
+
+    def test_translated_competition_entry_stored_against_the_main_lang(self):
+        client = Client()
+        client.login(username='superuser', password='pass')
+
+        en_comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description',
+            slug='test-competition')
+        self.main.add_child(instance=en_comp)
+        en_comp.save_revision().publish()
+
+        self.client.post(reverse(
+            'add_translation', args=[en_comp.id, 'fr']))
+        fr_comp = YourWordsCompetition.objects.get(
+            slug='french-translation-of-test-competition')
+        fr_comp.save_revision().publish()
+
+        client.post(
+            reverse('molo.yourwords:competition_entry', args=[fr_comp.slug]), {
+                'story_name': 'this is a french story',
+                'story_text': 'The text',
+                'terms_or_conditions_approved': 'true'})
+
+        entry = YourWordsCompetitionEntry.objects.all().first()
+        self.assertEqual(entry.story_name, 'this is a french story')
+        self.assertEqual(entry.competition.id, en_comp.id)

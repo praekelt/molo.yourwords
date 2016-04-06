@@ -28,7 +28,8 @@ class CompetitionEntry(CreateView):
     def form_valid(self, form):
         competition = get_object_or_404(
             YourWordsCompetition, slug=self.kwargs.get('slug'))
-        form.instance.competition = competition
+        form.instance.competition = (
+            competition.get_main_language_page().specific)
         form.instance.user = self.request.user
         return super(CompetitionEntry, self).form_valid(form)
 

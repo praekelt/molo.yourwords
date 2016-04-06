@@ -12,14 +12,15 @@ from wagtail.wagtailadmin.edit_handlers import (
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from molo.core.blocks import MarkDownBlock
-from molo.core.models import LanguagePage, SectionPage, ArticlePage
+from molo.core.models import (
+    Main, SectionPage, ArticlePage, TranslatablePageMixin)
 
 
-LanguagePage.subpage_types += ['yourwords.YourWordsCompetition']
+Main.subpage_types += ['yourwords.YourWordsCompetition']
 SectionPage.subpage_types += ['yourwords.YourWordsCompetition']
 
 
-class YourWordsCompetition(Page):
+class YourWordsCompetition(TranslatablePageMixin, Page):
     subpage_types = ['yourwords.TermsAndConditions', 'yourwords.ThankYou']
     description = models.TextField(null=True, blank=True)
     image = models.ForeignKey(
