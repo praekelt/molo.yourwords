@@ -90,7 +90,7 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         self.assertEquals(ArticlePage.objects.all().count(), 1)
         self.assertEquals(
             response['Location'],
-            'http://testserver/admin/pages/8/move/')
+            'http://testserver/admin/pages/%d/move/' % article.id)
 
         # second time it should redirect to the edit page
         response = client.get(
@@ -98,5 +98,5 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
             entry.id)
         self.assertEquals(
             response['Location'],
-            'http://testserver/admin/pages/8/edit/')
+            'http://testserver/admin/pages/%d/edit/' % article.id)
         self.assertEquals(ArticlePage.objects.all().count(), 1)
