@@ -10,7 +10,7 @@ def create_competition_index(apps, schema_editor):
     main = Main.objects.all().first()
 
     if main:
-        competition_index = YourWordsCompetitionIndexPage(title='Your words competition', slug='Your-words-competition')
+        competition_index = YourWordsCompetitionIndexPage(title='Your words competitions', slug='Your-words-competitions')
         main.add_child(instance=competition_index)
         competition_index.save_revision().publish()
 

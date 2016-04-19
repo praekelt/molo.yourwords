@@ -3,8 +3,9 @@ import datetime
 from molo.core.models import SiteLanguage, ArticlePage
 from molo.core.tests.base import MoloTestCaseMixin
 
-from molo.yourwords.models import (
-    YourWordsCompetitionEntry, YourWordsCompetition)
+from molo.yourwords.models import (YourWordsCompetition,
+                                   YourWordsCompetitionEntry,
+                                   YourWordsCompetitionIndexPage)
 from molo.yourwords.admin import (
     download_as_csv, YourWordsCompetitionEntryAdmin)
 
@@ -20,12 +21,17 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         self.mk_main()
         # Creates Main language
         self.english = SiteLanguage.objects.create(locale='en')
+        # Create competition index page
+        self.competition_index = YourWordsCompetitionIndexPage(
+            title='Your words competition', slug='Your-words-competition')
+        self.main.add_child(instance=self.competition_index)
+        self.competition_index.save_revision().publish()
 
     def test_download_as_csv(self):
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description')
-        self.main.add_child(instance=comp)
+        self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
         YourWordsCompetitionEntry.objects.create(
@@ -56,7 +62,7 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description')
-        self.main.add_child(instance=comp)
+        self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
         entry = YourWordsCompetitionEntry.objects.create(
@@ -84,7 +90,7 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         self.assertEquals(ArticlePage.objects.all().count(), 1)
         self.assertEquals(
             response['Location'],
-            'http://testserver/admin/pages/4/move/')
+            'http://testserver/admin/pages/8/move/')
 
         # second time it should redirect to the edit page
         response = client.get(
@@ -92,5 +98,5 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
             entry.id)
         self.assertEquals(
             response['Location'],
-            'http://testserver/admin/pages/4/edit/')
+            'http://testserver/admin/pages/8/edit/')
         self.assertEquals(ArticlePage.objects.all().count(), 1)
