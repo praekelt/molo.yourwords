@@ -6,18 +6,13 @@ from django.db import migrations, models
 
 def create_competition_index(apps, schema_editor):
     from molo.core.models import Main
-    from molo.yourwords.models import YourWordsCompetition, YourWordsCompetitionIndexPage
+    from molo.yourwords.models import YourWordsCompetitionIndexPage
     main = Main.objects.all().first()
 
     if main:
         competition_index = YourWordsCompetitionIndexPage(title='Your words competitions', slug='Your-words-competitions')
         main.add_child(instance=competition_index)
         competition_index.save_revision().publish()
-
-        # Move existing competitions
-        for page in YourWordsCompetition.objects.all().child_of(main):
-            page.move(competition_index, pos='last-child')
-
 
 
 class Migration(migrations.Migration):
