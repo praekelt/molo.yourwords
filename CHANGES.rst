@@ -1,6 +1,13 @@
 CHANGE LOG
 ==========
 
+1.0.1
+-----
+
+- Restructured your words competition to introduce index page
+
+NOTE: This release is not compatible with molo versions less than 3.0
+
 1.0.0
 -----
 
