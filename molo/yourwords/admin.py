@@ -43,7 +43,7 @@ def convert_to_article(request, entry_id):
     entry = get_object_or_404(YourWordsCompetitionEntry, pk=entry_id)
     if not entry.article_page:
         competition_index_page = (
-            YourWordsCompetitionIndexPage.objects.live().all().first())
+            YourWordsCompetitionIndexPage.objects.live().first())
         article = ArticlePage(
             title=entry.story_name,
             slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
