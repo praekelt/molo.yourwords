@@ -4,8 +4,9 @@ from django.core.urlresolvers import reverse
 
 from molo.core.tests.base import MoloTestCaseMixin
 from molo.core.models import SiteLanguage
-from molo.yourwords.models import (
-    YourWordsCompetition, YourWordsCompetitionEntry)
+from molo.yourwords.models import (YourWordsCompetition,
+                                   YourWordsCompetitionEntry,
+                                   YourWordsCompetitionIndexPage)
 
 
 class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
@@ -17,6 +18,11 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.english = SiteLanguage.objects.create(locale='en')
         # Creates Child language
         self.english = SiteLanguage.objects.create(locale='fr')
+        # Create competition index page
+        self.competition_index = YourWordsCompetitionIndexPage(
+            title='Your words competition', slug='Your-words-competition')
+        self.main.add_child(instance=self.competition_index)
+        self.competition_index.save_revision().publish()
 
     def test_yourwords_competition_page(self):
         client = Client()
@@ -26,12 +32,12 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.main.add_child(instance=comp)
+        self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
         comp = YourWordsCompetition.objects.get(slug='test-competition')
 
-        response = client.get('/test-competition/')
+        response = client.get('/Your-words-competition/test-competition/')
         self.assertContains(response, 'Test Competition')
         self.assertContains(response, 'This is the description')
 
@@ -43,7 +49,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.main.add_child(instance=comp)
+        self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
         comp = YourWordsCompetition.objects.get(slug='test-competition')
@@ -93,7 +99,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.main.add_child(instance=comp)
+        self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
         response = client.post(
@@ -113,7 +119,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.main.add_child(instance=comp)
+        self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
         self.client.post(reverse(
@@ -123,7 +129,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         page.save_revision().publish()
 
         response = self.client.get(reverse(
-            'wagtailadmin_explore', args=[self.main.id]))
+            'wagtailadmin_explore', args=[self.competition_index.id]))
         page = YourWordsCompetition.objects.get(
             slug='french-translation-of-test-competition')
         self.assertContains(response,
@@ -138,7 +144,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.main.add_child(instance=en_comp)
+        self.competition_index.add_child(instance=en_comp)
         en_comp.save_revision().publish()
 
         self.client.post(reverse(

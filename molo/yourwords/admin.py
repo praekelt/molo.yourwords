@@ -12,9 +12,10 @@ from django.http import HttpResponse
 
 from wagtail.wagtailcore.utils import cautious_slugify
 
-from molo.core.models import ArticlePage, Main
-from molo.yourwords.models import (
-    YourWordsCompetitionEntry, YourWordsCompetition)
+from molo.core.models import ArticlePage
+from molo.yourwords.models import (YourWordsCompetitionEntry,
+                                   YourWordsCompetition,
+                                   YourWordsCompetitionIndexPage)
 
 
 def download_as_csv(YourWordsCompetitionEntryAdmin, request, queryset):
@@ -41,7 +42,8 @@ def convert_to_article(request, entry_id):
 
     entry = get_object_or_404(YourWordsCompetitionEntry, pk=entry_id)
     if not entry.article_page:
-        main = Main.objects.first()
+        competition_index_page = (
+            YourWordsCompetitionIndexPage.objects.live().first())
         article = ArticlePage(
             title=entry.story_name,
             slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
@@ -50,7 +52,7 @@ def convert_to_article(request, entry_id):
                 "type": "paragraph", "value": entry.story_text,
             }])
         )
-        main.add_child(instance=article)
+        competition_index_page.add_child(instance=article)
         article.save_revision()
         article.unpublish()
 
