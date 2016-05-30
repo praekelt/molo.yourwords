@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+1.0.2
+-----
+- Removed `http://testserver` from test URLs
+
 1.0.1
 -----
 
