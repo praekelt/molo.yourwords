@@ -109,7 +109,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
                 'terms_or_conditions_approved': 'true'})
         self.assertEqual(
             response['Location'],
-            'http://testserver/yourwords/thankyou/test-competition/')
+            '/yourwords/thankyou/test-competition/')
 
     def test_translated_yourwords_competition_page_exists(self):
         client = Client()
