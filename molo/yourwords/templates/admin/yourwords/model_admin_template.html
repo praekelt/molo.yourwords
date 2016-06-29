@@ -25,7 +25,10 @@
 
 
             <div class="right">
-              <a href="{% url 'molo.yourwords:yourword_entries_export' %}" class="button bicolor icon icon-download">{% trans "Download CSV" %}</a>
+              <form method="post" action="">
+                  {% csrf_token %}
+                  <button type="submit" class="button bicolor icon icon-download">{% trans "Download CSV" %}</button>
+              </form>
              </div>
             </div>
         </header>

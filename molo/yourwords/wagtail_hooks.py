@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.views.generic import View
 from import_export import resources
 from molo.yourwords.admin import YourWordsCompetitionAdmin
 from molo.yourwords.models import YourWordsCompetitionEntry, \
@@ -9,28 +8,28 @@ from wagtailmodeladmin.options import ModelAdmin, wagtailmodeladmin_register, \
 from wagtailmodeladmin.views import IndexView
 
 
-class ModelAdminTemplate(IndexView):
-    def get_template_names(self):
-        return 'admin/yourwords/model_admin_template.html'
-
-
 class YourWordsEntriesResource(resources.ModelResource):
     class Meta:
         model = YourWordsCompetitionEntry
         exclude = ('id', '_convert', 'article_page')
 
 
-class YourWordEntriesExport(View):
-    model = YourWordsCompetitionEntry
-    list_filter = ['competition__slug']
+class ModelAdminTemplate(IndexView):
+    def post(self, request, *args, **kwargs):
+        list_filter = request.GET.get('competition__slug')
 
-    def get(self, request, *args, **kwargs):
-        dataset = YourWordsEntriesResource().export(YourWordsCompetitionEntry
-                                                    .objects.filter())
+        dataset = YourWordsEntriesResource().export(
+            YourWordsCompetitionEntry.objects.filter(
+                competition__slug=list_filter
+            ) if list_filter is not None else None)
+
         response = HttpResponse(dataset.csv, content_type="csv")
         response['Content-Disposition'] = \
-            'attachment; filename=yourwordsentries.csv'
+            'attachment; filename=yourwords_entries.csv'
         return response
+
+    def get_template_names(self):
+        return 'admin/yourwords/model_admin_template.html'
 
 
 class YourWordsEntriesModelAdmin(ModelAdmin):
@@ -70,6 +69,14 @@ class YourWordsModelAdmin(ModelAdmin, YourWordsCompetitionAdmin):
                     'number_of_entries']
 
     search_fields = ('story_name',)
+
+    def entries(self, obj, *args, **kwargs):
+        url = '/admin/modeladmin/yourwords/yourwordscompetitionentry/'
+        return '<a href="%s?competition__slug=%s">%s</a>' % (
+            url, obj.slug, obj)
+
+    entries.allow_tags = True
+    entries.short_description = 'Title'
 
 
 class YourWordsAdminGroup(ModelAdminGroup):
