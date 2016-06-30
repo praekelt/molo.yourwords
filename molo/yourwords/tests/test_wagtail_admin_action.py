@@ -1,3 +1,5 @@
+import datetime
+
 from molo.core.models import SiteLanguage
 from molo.core.tests.base import MoloTestCaseMixin
 
@@ -40,14 +42,21 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         )
         client = Client()
         client.login(username='superuser', password='pass')
+
         response = self.client.post('/admin/modeladmin/yourwords/'
                                     'yourwordscompetitionentry/')
+
+        date = str(datetime.datetime.now().date())
+
+        print response
 
         expected_output = (
             'competition,submission_date,user,story_name,story_text,'
             'terms_or_conditions_approved,hide_real_name,is_read,'
             'is_shortlisted,is_winner\r\n'
-            '7,2016-06-29,1,test,test body,1,1,0,0,0\r\n'
+            '7,{0},1,test,test body,1,1,0,0,0'.format(date)
         )
+
+        print expected_output
 
         self.assertContains(response, expected_output)
