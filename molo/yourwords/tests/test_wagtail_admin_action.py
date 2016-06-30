@@ -51,5 +51,3 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         )
 
         self.assertContains(response, expected_output)
-
-
