@@ -16,12 +16,30 @@ class YourWordsEntriesResource(resources.ModelResource):
 
 class ModelAdminTemplate(IndexView):
     def post(self, request, *args, **kwargs):
-        list_filter = request.GET.get('competition__slug')
+
+        submission_date__gte = request.GET.get('submission_date__gte')
+        submission_date__lt = request.GET.get('submission_date__lt')
+        is_read__exact = request.GET.get('is_read__exact')
+        is_shortlisted__exact = request.GET.get('is_shortlisted__exact')
+        is_winner__exact = request.GET.get('is_winner__exact')
+
+        filter_list = {
+            'submission_date__range': (submission_date__gte,
+                                       submission_date__lt)
+            if submission_date__gte and submission_date__lt else None,
+            'is_read': is_read__exact,
+            'is_shortlisted': is_shortlisted__exact,
+            'is_winner': is_winner__exact
+        }
+
+        arguments = {}
+
+        for key, value in filter_list.items():
+            if value:
+                arguments[key] = value
 
         dataset = YourWordsEntriesResource().export(
-            YourWordsCompetitionEntry.objects.filter(
-                competition__slug=list_filter
-            ) if list_filter is not None else None)
+            YourWordsCompetitionEntry.objects.filter(**arguments))
 
         response = HttpResponse(dataset.csv, content_type="csv")
         response['Content-Disposition'] = \
@@ -42,7 +60,7 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
                     'submission_date', 'is_read', 'is_shortlisted',
                     'is_winner', '_convert']
 
-    list_filter = ['competition__slug']
+    list_filter = ['submission_date', 'is_read', 'is_shortlisted', 'is_winner']
 
     search_fields = ('story_name',)
 
