@@ -1,3 +1,4 @@
+from daterange_filter.filter import DateRangeFilter
 from django.http import HttpResponse
 from import_export import resources
 from molo.yourwords.admin import YourWordsCompetitionAdmin
@@ -6,6 +7,10 @@ from molo.yourwords.models import YourWordsCompetitionEntry, \
 from wagtailmodeladmin.options import ModelAdmin, wagtailmodeladmin_register, \
     ModelAdminGroup
 from wagtailmodeladmin.views import IndexView
+
+
+class DateFilter(DateRangeFilter):
+    template = 'admin/yourwords/yourwords_date_range_filter.html'
 
 
 class YourWordsEntriesResource(resources.ModelResource):
@@ -17,16 +22,21 @@ class YourWordsEntriesResource(resources.ModelResource):
 class ModelAdminTemplate(IndexView):
     def post(self, request, *args, **kwargs):
 
-        submission_date__gte = request.GET.get('submission_date__gte')
-        submission_date__lt = request.GET.get('submission_date__lt')
+        drf__submission_date__gte = request.GET.get(
+            'drf__submission_date__gte'
+        )
+        drf__submission_date__lte = request.GET.get(
+            'drf__submission_date__lte'
+        )
         is_read__exact = request.GET.get('is_read__exact')
         is_shortlisted__exact = request.GET.get('is_shortlisted__exact')
         is_winner__exact = request.GET.get('is_winner__exact')
 
         filter_list = {
-            'submission_date__range': (submission_date__gte,
-                                       submission_date__lt)
-            if submission_date__gte and submission_date__lt else None,
+            'submission_date__range': (drf__submission_date__gte,
+                                       drf__submission_date__lte)
+            if drf__submission_date__gte and
+               drf__submission_date__lte else None,
             'is_read': is_read__exact,
             'is_shortlisted': is_shortlisted__exact,
             'is_winner': is_winner__exact
@@ -60,7 +70,8 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
                     'submission_date', 'is_read', 'is_shortlisted',
                     'is_winner', '_convert']
 
-    list_filter = ['submission_date', 'is_read', 'is_shortlisted', 'is_winner']
+    list_filter = [('submission_date', DateFilter), 'is_read',
+                   'is_shortlisted', 'is_winner']
 
     search_fields = ('story_name',)
 
