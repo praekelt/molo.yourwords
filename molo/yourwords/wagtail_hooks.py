@@ -36,7 +36,7 @@ class ModelAdminTemplate(IndexView):
             'submission_date__range': (drf__submission_date__gte,
                                        drf__submission_date__lte)
             if drf__submission_date__gte and
-               drf__submission_date__lte else None,
+            drf__submission_date__lte else None,
             'is_read': is_read__exact,
             'is_shortlisted': is_shortlisted__exact,
             'is_winner': is_winner__exact
