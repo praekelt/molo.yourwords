@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+1.1.0
+-----
+- Add support for hiding untranslated content
+
 1.0.2
 -----
 - Removed `http://testserver` from test URLs
