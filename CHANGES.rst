@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+1.1.1
+-----
+- BEM templates methodology  
+
 1.1.0
 -----
 - Add support for hiding untranslated content
