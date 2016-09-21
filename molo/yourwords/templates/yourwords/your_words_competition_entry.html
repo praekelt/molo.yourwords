@@ -3,8 +3,6 @@
 
 {% block content %}
 
-
-
 <div class="yourwords yourwords{{competition.get_effective_extra_style_hints}}">
   <div class="heading-container {% if self.image %}feature-image{% endif %}">
     {% if competition.thank_you_page.get_parent_page.get_effective_image %}
@@ -17,13 +15,14 @@
     </h1>
   </div>
 
-  <h3>{{competition.title}}</h3>
-  <p>{{competition.description}}</p>
-  <hr>
-  <div class="yourwords centent">
+  <h3 class="competition__title">{{competition.title}}</h3>
+  <h4 class="competition__title competition__title--description">{{competition.description}}</h4>
+  <div class="yourwords--inner-content">
     {% for block in competition.content %}
         {% if block.block_type == 'heading' %}
-            <h5>{{ block.value }}</h5>
+        <h1 class="heading heading--yourwords">
+          {{ block.value }}
+        </h1>
         {% else %}
         {% if block.block_type == 'image' %}
           {% image block.value width-240 %}
@@ -31,14 +30,14 @@
         {% if block.block_type == 'numbered_list' %}
           <ol>
           {% for item in block.value %}
-            <li>{{item}}</li>
+            <li>{{ item|handle_markdown }}</li>
           {% endfor %}
           </ol>
         {% else %}
         {% if block.block_type == 'list' %}
           <ul>
           {% for item in block.value %}
-            <li>{{item}}</li>
+            <li>{{ item|handle_markdown }}</li>
           {% endfor %}
         </ul>
         {% else %}
@@ -49,37 +48,40 @@
         {% endif %}
     {% endfor %}
 
-    <form method="post">{% csrf_token %}
+    <form method="post" class="yourwords-form">
+    {% csrf_token %}
+       
+        <fieldset>
+          <label>{% trans "Title of your story (max 60 characters)" %}</label>
+          {{ form.story_name }}
+           {% if form.story_name.errors %}
+            <p class="alert-error">* {{form.story_name.errors|join:' '}}</p>
+          {% endif %}
+        </fieldset>
 
-        {% if form.story_name.errors %}
-          <p class="alert-error">* {{form.story_name.errors|join:' '}}</p>
-        {% endif %}
-        <br>
-        <label>{% trans "Title of your story (max 60 characters)" %}</label>
-        {{ form.story_name }}
+        <fieldset>
+          <label for="">{% trans "Tell us your story here" %}</label>
+          {{ form.story_text }}
+          {% if form.story_text.errors %}
+            <p class="alert-error" >* {{form.story_text.errors|join:' '}}</p>
+          {% endif %}
+        </fieldset>
 
-        {% if form.story_text.errors %}
-          <p class="alert-error" >* {{form.story_text.errors|join:' '}}</p>
-        {% endif %}
-        <label>{% trans "Tell us your story here" %}</label>
-        {{ form.story_text }}
-
-        <div>
-          {% if form.terms_or_conditions_approved.errors %}
+        <fieldset>
+           {{ form.terms_or_conditions_approved }}
+           <label for="id_terms_or_conditions_approved">{% trans "I accept the Terms and Conditions" %}</label>
+           {% if form.terms_or_conditions_approved.errors %}
           <p class="alert-error">* {{form.terms_or_conditions_approved.errors|join:' '}}</p>
           {% endif %}
-          {{ form.terms_or_conditions_approved }}
-          <label>{% trans "I accept the Terms and Conditions" %}</label>
-        </div>
+        </fieldset>
 
-        <div >
+        <fieldset>
           {{ form.hide_real_name }}
           <label>{% trans "Share my story anonymously" %}</label>
-        </div>
-
+        </fieldset>
         <input type="submit" value="Submit Your Story" />
     </form>
   </div>
-    <a href="{{request.site.root_page.url}}" class="button inverted">{% trans "Home" %}</a>
+    <a href="{{request.site.root_page.url}}" class="call-to-action__nav-item call-to-action__nav-item--yourwords call-to-action__nav-item--back-home">{% trans "Home" %}</a>
 </div>
 {% endblock %}

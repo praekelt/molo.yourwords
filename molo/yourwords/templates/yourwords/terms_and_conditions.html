@@ -10,7 +10,7 @@
 
   <h1 class="heading heading--yourwords">{{self.title}}</h1>
   <h2 class="heading heading--yourwords-subtitle">{{self.subtitle}}</h2>
-  <div class="yourwords yourwords--inner-content">
+  <div class="yourwords--inner-content">
   {% for block in self.body %}
       {% if block.block_type == 'heading' %}
         <h1 class="heading heading--yourwords">
