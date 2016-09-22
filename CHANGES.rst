@@ -1,9 +1,13 @@
 CHANGE LOG
 ==========
 
+1.1.2
+-----
+- Return None if there is no competition
+
 1.1.1
 -----
-- BEM templates methodology  
+- BEM templates methodology
 
 1.1.0
 -----
