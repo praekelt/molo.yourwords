@@ -49,7 +49,7 @@
         {% endif %}
         {% endif %}
     {% endfor %}
-
+    </div>
     <form method="post" class="yourwords-form">
     {% csrf_token %}
        
@@ -83,7 +83,7 @@
         </fieldset>
         <input type="submit" value="Submit Your Story" />
     </form>
-  </div>
+ 
     <a href="{{request.site.root_page.url}}" class="call-to-action__nav-item call-to-action__nav-item--yourwords call-to-action__nav-item--back-home">{% trans "Home" %}</a>
 </div>
 {% endblock %}
