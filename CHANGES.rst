@@ -1,6 +1,12 @@
 CHANGE LOG
 ==========
 
+1.1.3
+-----
+- Home page thumbnail and main page images
+
+NOTE: Templates updates
+
 1.1.2
 -----
 - Return None if there is no competition
