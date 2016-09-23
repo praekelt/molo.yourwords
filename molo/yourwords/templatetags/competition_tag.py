@@ -20,7 +20,7 @@ def your_words_competition(context):
             YourWordsCompetition.objects.child_of(page).filter(
                 languages__language__is_main_language=True).specific())
     else:
-        competitions = []
+        competitions = YourWordsCompetition.objects.none()
 
     context.update({
         'competitions': get_pages(context, competitions, locale_code)
