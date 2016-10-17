@@ -28,6 +28,27 @@ def your_words_competition(context):
     return context
 
 
+@register.inclusion_tag(
+    'yourwords/your_words_competition_tag_for_section.html',
+    takes_context=True
+)
+def your_words_competition_in_section(context, section):
+    context = copy(context)
+    locale_code = context.get('locale_code')
+    page = section.get_main_language_page()
+    if page:
+        competitions = (
+            YourWordsCompetition.objects.child_of(page).filter(
+                languages__language__is_main_language=True).specific())
+    else:
+        competitions = YourWordsCompetition.objects.none()
+
+    context.update({
+        'competitions': get_pages(context, competitions, locale_code)
+    })
+    return context
+
+
 @register.assignment_tag(takes_context=True)
 def load_thank_you_page_for_competition(context, competition):
 
@@ -44,22 +65,3 @@ def load_thank_you_page_for_competition(context, competition):
         return get_pages(context, qs, locale)
     else:
         return []
-
-
-@register.assignment_tag(takes_context=True)
-def your_words_template_tag(context, section):
-    '''
-    Returns all child articles
-    If the `locale_code` in the context is not the main language, it will
-    return the translations of the live articles.
-    '''
-    page = section.get_main_language_page()
-    locale = context.get('locale_code')
-
-    qs = YourWordsCompetition.objects.child_of(page).filter(
-        languages__language__is_main_language=True)
-
-    if not locale:
-        return qs
-
-    return get_pages(context, qs, locale)
