@@ -44,7 +44,8 @@ def your_words_competition_in_section(context, section):
         competitions = YourWordsCompetition.objects.none()
 
     context.update({
-        'competitions': get_pages(context, competitions, locale_code)
+        'competitions': get_pages(context, competitions, locale_code),
+        'section': section
     })
     return context
 
