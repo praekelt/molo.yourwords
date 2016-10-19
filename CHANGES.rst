@@ -1,9 +1,13 @@
 CHANGE LOG
 ==========
 
+1.2.0
+-----
+- Add yourwords to sections
+
 1.1.4
 -----
-- Server srcset image thumbnail 
+- Server srcset image thumbnail
 
 1.1.3
 -----
