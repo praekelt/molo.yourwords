@@ -1,6 +1,20 @@
 CHANGE LOG
 ==========
 
+1.2.0
+-----
+- Add yourwords to sections
+
+1.1.4
+-----
+- Server srcset image thumbnail
+
+1.1.3
+-----
+- Home page thumbnail and main page images
+
+NOTE: Templates updates
+
 1.1.2
 -----
 - Return None if there is no competition
