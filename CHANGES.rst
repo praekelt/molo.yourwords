@@ -1,9 +1,13 @@
 CHANGE LOG
 ==========
 
+1.2.1
+-----
+- Updated YourWords markup to
+
 1.2.0
 -----
-- Add yourwords to sections
+- Add YourWords to sections
 
 1.1.4
 -----
