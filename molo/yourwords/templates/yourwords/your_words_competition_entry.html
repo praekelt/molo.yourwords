@@ -3,15 +3,13 @@
 
 {% block content %}
 
-<div class="yourwords yourwords{{competition.get_effective_extra_style_hints}}">
+<div class="yourwords yourwords--entries">
   <div class="heading-container {% if self.image %}feature-image{% endif %}">
-  
     {% if competition.thank_you_page.get_parent_page.get_effective_image %}
       {% image competition.thank_you_page.get_parent_page.get_effective_image width-98 as tmp_photo_small %}
       {% image competition.thank_you_page.get_parent_page.get_effective_image width-320 as tmp_photo_large %}
        <img src="{{ tmp_photo_small.url }}" srcset="{{ tmp_photo_large.url }}" alt="{{ self.get_parent_page.get_effective_image.title }}"/>
     {% endif %}
-
     <h1 class="heading heading--yourwords">
         {% trans "Share your story" %}
     </h1>
@@ -52,7 +50,6 @@
     </div>
     <form method="post" class="yourwords-form">
     {% csrf_token %}
-       
         <fieldset>
           <label>{% trans "Title of your story (max 60 characters)" %}</label>
           {{ form.story_name }}
@@ -83,7 +80,7 @@
         </fieldset>
         <input type="submit" value="Submit Your Story" />
     </form>
- 
+
     <a href="{{request.site.root_page.url}}" class="call-to-action__nav-item call-to-action__nav-item--yourwords call-to-action__nav-item--back-home">{% trans "Home" %}</a>
 </div>
 {% endblock %}
