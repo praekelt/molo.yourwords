@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+1.2.2
+-----
+- Add yourwords permission to groups
+
 1.2.1
 -----
 - Updated YourWords markup to
