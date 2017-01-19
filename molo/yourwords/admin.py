@@ -28,6 +28,8 @@ def download_as_csv(YourWordsCompetitionEntryAdmin, request, queryset):
     for obj in queryset:
         writer.writerow([getattr(obj, field) for field in field_names])
     return response
+
+
 download_as_csv.short_description = "Download selected as csv"
 
 
