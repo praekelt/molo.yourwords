@@ -1,6 +1,11 @@
 CHANGE LOG
 ==========
 
+2.0.0
+-----
+- Upgraded dependency to molo v4
+- Fixed bug in converting yourwords entry to an article
+
 1.2.2
 -----
 - Add yourwords permission to groups
