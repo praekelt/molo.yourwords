@@ -41,6 +41,42 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.assertContains(response, 'Test Competition')
         self.assertContains(response, 'This is the description')
 
+    def test_translated_yourwords_competition_page_exists_section(self):
+        client = Client()
+        client.login(username='superuser', password='pass')
+
+        self.yourmind = self.mk_section(
+            self.section_index, title='Your mind')
+
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description',
+            slug='test-competition')
+        self.yourmind.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        self.client.post(reverse(
+            'add_translation', args=[comp.id, 'fr']))
+        page = YourWordsCompetition.objects.get(
+            slug='french-translation-of-test-competition')
+        page.save_revision().publish()
+
+        response = self.client.get('/sections/your-mind/')
+        self.assertContains(response, 'Test Competition')
+        self.assertContains(response, 'This is the description')
+
+        response = self.client.get('/')
+        self.assertContains(response, 'Test Competition')
+        self.assertContains(response, 'This is the description')
+
+        self.client.get('/locale/fr/')
+
+        response = self.client.get('/sections/your-mind/')
+        self.assertContains(response, page.title)
+
+        response = self.client.get('/')
+        self.assertContains(response, page.title)
+
     def test_yourwords_validation_for_fields(self):
         client = Client()
         client.login(username='superuser', password='pass')

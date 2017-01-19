@@ -1,9 +1,26 @@
 CHANGE LOG
 ==========
 
+2.0.0
+-----
+- Upgraded dependency to molo v4
+- Fixed bug in converting yourwords entry to an article
+
+1.2.2
+-----
+- Add yourwords permission to groups
+
+1.2.1
+-----
+- Updated YourWords markup to
+
+1.2.0
+-----
+- Add YourWords to sections
+
 1.1.4
 -----
-- Server srcset image thumbnail 
+- Server srcset image thumbnail
 
 1.1.3
 -----
