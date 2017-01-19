@@ -48,8 +48,8 @@ def convert_to_article(request, entry_id):
             title=entry.story_name,
             slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
             body=json.dumps([{
+                "type": "paragraph", "value": "LOOKOVERHERE",
                 "type": "paragraph", "value": get_entry_author(entry),
-                "type": "paragraph", "value": entry.story_text,
             }])
         )
         competition_index_page.add_child(instance=article)
