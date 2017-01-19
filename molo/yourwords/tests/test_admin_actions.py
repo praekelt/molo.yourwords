@@ -82,10 +82,10 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         entry = YourWordsCompetitionEntry.objects.get(pk=entry.pk)
         self.assertEquals(entry.story_name, article.title)
         self.assertEquals(entry.article_page, article)
-        self.assertEquals(article.body.stream_data, [{
-            "type": "paragraph", "value": "COWABUNGA!",
-            "type": "paragraph", "value": "Written by: Anonymous",
-        }])
+        self.assertEquals(article.body.stream_data, [
+            {"type": "paragraph", "value": "Written by: Anonymous"},
+            {"type": "paragraph", "value": entry.story_text}
+        ])
 
         self.assertEquals(ArticlePage.objects.all().count(), 1)
         self.assertEquals(
