@@ -213,7 +213,6 @@ class TestDeleteButtonRemoved(TestCase, MoloTestCaseMixin):
 
         self.login()
 
-        # Create polls index page
         self.yr_words_comp_index = YourWordsCompetitionIndexPage(
             title='Security Questions',
             slug='security-questions')
@@ -239,26 +238,26 @@ class TestDeleteButtonRemoved(TestCase, MoloTestCaseMixin):
                 self.assertFalse(row.find('a', string='Delete'))
 
     def test_delete_button_removed_from_dropdown_menu(self):
-        security_q_index_page = YourWordsCompetitionIndexPage.objects.first()
+        yr_wrds_comp_index_page = YourWordsCompetitionIndexPage.objects.first()
 
         response = self.client.get('/admin/pages/{0}/'
-                                   .format(str(security_q_index_page.pk)))
+                                   .format(str(yr_wrds_comp_index_page.pk)))
         self.assertEquals(response.status_code, 200)
 
         delete_link = ('<a href="/admin/pages/{0}/delete/" '
                        'title="Delete this page" class="u-link '
                        'is-live ">Delete</a>'
-                       .format(str(security_q_index_page.pk)))
+                       .format(str(yr_wrds_comp_index_page.pk)))
         self.assertNotContains(response, delete_link, html=True)
 
     def test_delete_button_removed_in_edit_menu(self):
-        security_q_index_page = YourWordsCompetitionIndexPage.objects.first()
+        yr_wrds_comp_index_page = YourWordsCompetitionIndexPage.objects.first()
 
         response = self.client.get('/admin/pages/{0}/edit/'
-                                   .format(str(security_q_index_page.pk)))
+                                   .format(str(yr_wrds_comp_index_page.pk)))
         self.assertEquals(response.status_code, 200)
 
         delete_button = ('<li><a href="/admin/pages/{0}/delete/" '
                          'class="shortcut">Delete</a></li>'
-                         .format(str(security_q_index_page.pk)))
+                         .format(str(yr_wrds_comp_index_page.pk)))
         self.assertNotContains(response, delete_button, html=True)
