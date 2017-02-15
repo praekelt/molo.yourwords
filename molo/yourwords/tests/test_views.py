@@ -3,10 +3,15 @@ from django.test.client import Client
 from django.core.urlresolvers import reverse
 
 from molo.core.tests.base import MoloTestCaseMixin
-from molo.core.models import SiteLanguage
+from molo.core.models import (
+    SiteLanguage,
+    Main,
+)
 from molo.yourwords.models import (YourWordsCompetition,
                                    YourWordsCompetitionEntry,
                                    YourWordsCompetitionIndexPage)
+
+from bs4 import BeautifulSoup
 
 
 class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
@@ -198,3 +203,61 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         entry = YourWordsCompetitionEntry.objects.all().first()
         self.assertEqual(entry.story_name, 'this is a french story')
         self.assertEqual(entry.competition.id, en_comp.id)
+
+
+class TestDeleteButtonRemoved(TestCase, MoloTestCaseMixin):
+
+    def setUp(self):
+        self.mk_main()
+        self.english = SiteLanguage.objects.create(locale='en')
+
+        self.login()
+
+        self.yr_words_comp_index = YourWordsCompetitionIndexPage(
+            title='Security Questions',
+            slug='security-questions')
+        self.main.add_child(instance=self.yr_words_comp_index)
+        self.yr_words_comp_index.save_revision().publish()
+
+    def test_delete_btn_removed_for_yr_wrds_comp_index_page_in_main(self):
+
+        main_page = Main.objects.first()
+        response = self.client.get('/admin/pages/{0}/'
+                                   .format(str(main_page.pk)))
+        self.assertEquals(response.status_code, 200)
+
+        yr_words_comp_index_page_title = (
+            YourWordsCompetitionIndexPage.objects.first().title)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        index_page_rows = soup.find_all('tbody')[0].find_all('tr')
+
+        for row in index_page_rows:
+            if row.h2.a.string == yr_words_comp_index_page_title:
+                self.assertTrue(row.find('a', string='Edit'))
+                self.assertFalse(row.find('a', string='Delete'))
+
+    def test_delete_button_removed_from_dropdown_menu(self):
+        yr_wrds_comp_index_page = YourWordsCompetitionIndexPage.objects.first()
+
+        response = self.client.get('/admin/pages/{0}/'
+                                   .format(str(yr_wrds_comp_index_page.pk)))
+        self.assertEquals(response.status_code, 200)
+
+        delete_link = ('<a href="/admin/pages/{0}/delete/" '
+                       'title="Delete this page" class="u-link '
+                       'is-live ">Delete</a>'
+                       .format(str(yr_wrds_comp_index_page.pk)))
+        self.assertNotContains(response, delete_link, html=True)
+
+    def test_delete_button_removed_in_edit_menu(self):
+        yr_wrds_comp_index_page = YourWordsCompetitionIndexPage.objects.first()
+
+        response = self.client.get('/admin/pages/{0}/edit/'
+                                   .format(str(yr_wrds_comp_index_page.pk)))
+        self.assertEquals(response.status_code, 200)
+
+        delete_button = ('<li><a href="/admin/pages/{0}/delete/" '
+                         'class="shortcut">Delete</a></li>'
+                         .format(str(yr_wrds_comp_index_page.pk)))
+        self.assertNotContains(response, delete_button, html=True)
