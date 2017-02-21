@@ -4,9 +4,12 @@ from import_export import resources
 from molo.yourwords.admin import YourWordsCompetitionAdmin
 from molo.yourwords.models import YourWordsCompetitionEntry, \
     YourWordsCompetition
-from wagtailmodeladmin.options import ModelAdmin, wagtailmodeladmin_register, \
-    ModelAdminGroup
-from wagtailmodeladmin.views import IndexView
+from wagtail.contrib.modeladmin.options import (
+    ModelAdmin,
+    modeladmin_register,
+    ModelAdminGroup,
+)
+from wagtail.contrib.modeladmin.views import IndexView
 
 
 class DateFilter(DateRangeFilter):
@@ -100,7 +103,7 @@ class YourWordsModelAdmin(ModelAdmin, YourWordsCompetitionAdmin):
     search_fields = ('story_name',)
 
     def entries(self, obj, *args, **kwargs):
-        url = '/admin/modeladmin/yourwords/yourwordscompetitionentry/'
+        url = '/admin/yourwords/yourwordscompetitionentry/'
         return '<a href="%s?competition__slug=%s">%s</a>' % (
             url, obj.slug, obj)
 
@@ -115,4 +118,4 @@ class YourWordsAdminGroup(ModelAdminGroup):
     items = (YourWordsEntriesModelAdmin, YourWordsModelAdmin)
 
 
-wagtailmodeladmin_register(YourWordsAdminGroup)
+modeladmin_register(YourWordsAdminGroup)

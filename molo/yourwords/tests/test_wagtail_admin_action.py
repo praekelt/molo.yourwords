@@ -43,7 +43,7 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         client = Client()
         client.login(username='superuser', password='pass')
 
-        response = self.client.post('/admin/modeladmin/yourwords/'
+        response = self.client.post('/admin/yourwords/'
                                     'yourwordscompetitionentry/')
 
         date = str(datetime.datetime.now().date())

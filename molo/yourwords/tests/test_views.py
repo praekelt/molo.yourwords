@@ -215,7 +215,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         client.login(username='superuser', password='pass')
 
         response = client.get(
-            '/admin/modeladmin/yourwords/yourwordscompetition/'
+            '/admin/yourwords/yourwordscompetition/'
         )
 
         self.assertContains(response, comp.title)
@@ -242,7 +242,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         client.login(username='superuser', password='pass')
 
         response = client.get(
-            '/admin/modeladmin/yourwords/yourwordscompetitionentry/'
+            '/admin/yourwords/yourwordscompetitionentry/'
         )
 
         self.assertContains(response, entry.story_name)
