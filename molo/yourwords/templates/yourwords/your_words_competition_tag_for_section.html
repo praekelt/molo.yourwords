@@ -6,17 +6,16 @@
 {% if competitions %}
   {% for competition in competitions %}
   {% if forloop.first %}
-  <div class="yourwords yourwords{{competition.get_effective_extra_style_hints}}">
+  <div class="yourwords yourwords{{section.get_effective_extra_style_hints}}">
     <h1 class="heading heading--yourwords heading--hero-yourwords">
       {% trans "Competition" %}
     </h1>
-    
+
     {% if competition.thank_you_page.get_parent_page.get_effective_image %}
       {% image competition.thank_you_page.get_parent_page.get_effective_image width-98 as tmp_photo_small %}
       {% image competition.thank_you_page.get_parent_page.get_effective_image width-320 as tmp_photo_large %}
        <img src="{{ tmp_photo_small.url }}" srcset="{{ tmp_photo_large.url }}" alt="{{ competition.get_parent_page.get_effective_image.title }}"/>
     {% endif %}
-
     <h2 class="heading heading--yourwords-subtitle">
       {% trans "Share your story" %}
     </h2>

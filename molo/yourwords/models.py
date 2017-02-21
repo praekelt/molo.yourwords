@@ -12,10 +12,17 @@ from wagtail.wagtailadmin.edit_handlers import (
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from molo.core.blocks import MarkDownBlock
-from molo.core.models import ArticlePage, TranslatablePageMixin
+from molo.core.models import (
+    ArticlePage,
+    TranslatablePageMixin,
+    SectionPage,
+    PreventDeleteMixin
+)
+
+SectionPage.subpage_types += ['yourwords.YourWordsCompetition']
 
 
-class YourWordsCompetitionIndexPage(Page):
+class YourWordsCompetitionIndexPage(Page, PreventDeleteMixin):
     parent_page_types = []
     subpage_types = ['yourwords.YourWordsCompetition']
 

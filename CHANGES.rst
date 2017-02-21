@@ -1,6 +1,49 @@
 CHANGE LOG
 ==========
 
+2.1.0
+-----
+- Removed ability to delete YourWords Competition IndexPage in the Admin UI
+
+2.0.0
+-----
+- Upgraded dependency to molo v4
+- Fixed bug in converting yourwords entry to an article
+
+1.2.2
+-----
+- Add yourwords permission to groups
+
+1.2.1
+-----
+- Updated YourWords markup to
+
+1.2.0
+-----
+- Add YourWords to sections
+
+1.1.4
+-----
+- Server srcset image thumbnail
+
+1.1.3
+-----
+- Home page thumbnail and main page images
+
+NOTE: Templates updates
+
+1.1.2
+-----
+- Return None if there is no competition
+
+1.1.1
+-----
+- BEM templates methodology
+
+1.1.0
+-----
+- Add support for hiding untranslated content
+
 1.0.2
 -----
 - Removed `http://testserver` from test URLs
