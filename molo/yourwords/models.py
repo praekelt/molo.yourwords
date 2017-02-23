@@ -120,13 +120,11 @@ class YourWordsCompetitionEntry(models.Model):
     panels = [
         MultiFieldPanel(
             [
+                # TODO: Use ReadOnlyPanel for story_name and story_text
+                # TODO: Add back other fields as read_only
                 FieldPanel('competition'),
-                # FieldPanel('submission_date'),
-                FieldPanel('user'),
                 FieldPanel('story_name'),
                 FieldPanel('story_text'),
-                FieldPanel('terms_or_conditions_approved'),
-                FieldPanel('hide_real_name'),
                 FieldPanel('is_read'),
                 FieldPanel('is_shortlisted'),
                 FieldPanel('is_winner'),
