@@ -204,6 +204,49 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.assertEqual(entry.story_name, 'this is a french story')
         self.assertEqual(entry.competition.id, en_comp.id)
 
+    def test_yourwords_wagtail_competition_view(self):
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description')
+        self.competition_index.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        client = Client()
+        client.login(username='superuser', password='pass')
+
+        response = client.get(
+            '/admin/yourwords/yourwordscompetition/'
+        )
+
+        self.assertContains(response, comp.title)
+
+    def test_yourwords_wagtail_entries_view(self):
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description')
+        self.competition_index.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        YourWordsCompetitionEntry.objects.create(
+            competition=comp,
+            user=self.user,
+            story_name='test',
+            story_text='test body',
+            terms_or_conditions_approved=True,
+            hide_real_name=True
+        )
+
+        entry = YourWordsCompetitionEntry.objects.all().first()
+
+        client = Client()
+        client.login(username='superuser', password='pass')
+
+        response = client.get(
+            '/admin/yourwords/yourwordscompetitionentry/'
+        )
+
+        self.assertContains(response, entry.story_name)
+
 
 class TestDeleteButtonRemoved(TestCase, MoloTestCaseMixin):
 
