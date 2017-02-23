@@ -92,10 +92,16 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
     _convert.short_description = ''
 
 
+class ModelAdminCompetitionTemplate(IndexView):
+    def get_template_names(self):
+        return 'admin/yourwords/model_admin_competition_template.html'
+
+
 class YourWordsModelAdmin(ModelAdmin, YourWordsCompetitionAdmin):
     model = YourWordsCompetition
     menu_label = 'Competitions'
     menu_icon = 'doc-full'
+    index_view_class = ModelAdminCompetitionTemplate
     add_to_settings_menu = False
     list_display = ['entries', 'start_date', 'end_date', 'status',
                     'number_of_entries']
