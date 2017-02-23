@@ -19,6 +19,7 @@ script:
   - cp molo/yourwords/test_templates/section_listing_homepage.html testapp/testapp/templates/core/tags/section_listing_homepage.html
   - pip install molo.profiles
   - flake8 testapp
+  - ./manage.py compress --settings=testapp.settings.production
   - pip install -e testapp
   - py.test --cov=molo
 after_success:
