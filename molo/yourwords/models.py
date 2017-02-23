@@ -117,6 +117,23 @@ class YourWordsCompetitionEntry(models.Model):
         help_text=_('Page to which the entry was converted to')
     )
 
+    panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel('competition'),
+                # FieldPanel('submission_date'),
+                FieldPanel('user'),
+                FieldPanel('story_name'),
+                FieldPanel('story_text'),
+                FieldPanel('terms_or_conditions_approved'),
+                FieldPanel('hide_real_name'),
+                FieldPanel('is_read'),
+                FieldPanel('is_shortlisted'),
+                FieldPanel('is_winner'),
+            ],
+            heading="Entry Settings",)
+    ]
+
     class Meta:
         verbose_name = 'YourWords Competition Entry'
         verbose_name_plural = 'YourWords Competition Entries'
