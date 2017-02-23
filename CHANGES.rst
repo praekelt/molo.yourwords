@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+2.2.0
+-----
+- Added Your Words view to Wagtail Admin
+
 2.1.0
 -----
 - Removed ability to delete YourWords Competition IndexPage in the Admin UI
