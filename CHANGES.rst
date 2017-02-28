@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+2.2.1
+-----
+- Fixed brken link for competitions in the admin, by allowing users to filter competition entries by competition slug
+
 2.2.0
 -----
 - Added Your Words view to Wagtail Admin
