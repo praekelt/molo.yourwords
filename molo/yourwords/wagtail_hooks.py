@@ -74,7 +74,7 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
                     'is_winner', '_convert']
 
     list_filter = [('submission_date', DateFilter), 'is_read',
-                   'is_shortlisted', 'is_winner']
+                   'is_shortlisted', 'is_winner', 'competition__slug']
 
     search_fields = ('story_name',)
 
