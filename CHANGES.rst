@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+1.3.0
+-----
+- Added yourwords wagtailadmin for CentralCMS
+
 1.2.2
 -----
 - Add yourwords permission to groups

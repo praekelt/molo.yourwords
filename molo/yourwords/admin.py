@@ -28,6 +28,8 @@ def download_as_csv(YourWordsCompetitionEntryAdmin, request, queryset):
     for obj in queryset:
         writer.writerow([getattr(obj, field) for field in field_names])
     return response
+
+
 download_as_csv.short_description = "Download selected as csv"
 
 
@@ -47,10 +49,10 @@ def convert_to_article(request, entry_id):
         article = ArticlePage(
             title=entry.story_name,
             slug='yourwords-entry-%s' % cautious_slugify(entry.story_name),
-            body=json.dumps([{
-                "type": "paragraph", "value": get_entry_author(entry),
-                "type": "paragraph", "value": entry.story_text,
-            }])
+            body=json.dumps([
+                {"type": "paragraph", "value": get_entry_author(entry)},
+                {"type": "paragraph", "value": entry.story_text}
+            ])
         )
         competition_index_page.add_child(instance=article)
         article.save_revision()
