@@ -17,7 +17,7 @@ script:
   - molo scaffold testapp --include molo.yourwords ^yourwords/ --include molo.profiles ^profiles/
   - cp molo/yourwords/test_templates/section_page.html testapp/testapp/templates/core/section_page.html
   - cp molo/yourwords/test_templates/section_listing_homepage.html testapp/testapp/templates/core/tags/section_listing_homepage.html
-  - pip install molo.profiles
+  - pip install molo.profiles==1.5.1
   - flake8 testapp
   - pip install -e testapp
   - py.test --cov=molo
