@@ -6,7 +6,9 @@ from molo.core.tests.base import MoloTestCaseMixin
 from molo.core.models import (
     SiteLanguage,
     Main,
+    SectionIndexPage,
 )
+from molo.yourwords.tests.base import BaseYourWordsTestCase
 from molo.yourwords.models import (YourWordsCompetition,
                                    YourWordsCompetitionEntry,
                                    YourWordsCompetitionIndexPage)
@@ -14,24 +16,13 @@ from molo.yourwords.models import (YourWordsCompetition,
 from bs4 import BeautifulSoup
 
 
-class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
-
-    def setUp(self):
-        self.user = self.login()
-        self.mk_main()
-        # Creates Main language
-        self.english = SiteLanguage.objects.create(locale='en')
-        # Creates Child language
-        self.english = SiteLanguage.objects.create(locale='fr')
-        # Create competition index page
-        self.competition_index = YourWordsCompetitionIndexPage(
-            title='Your words competition', slug='Your-words-competition')
-        self.main.add_child(instance=self.competition_index)
-        self.competition_index.save_revision().publish()
+class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
 
     def test_yourwords_competition_page(self):
-        client = Client()
-        client.login(username='superuser', password='pass')
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         comp = YourWordsCompetition(
             title='Test Competition',
@@ -39,25 +30,32 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             slug='test-competition')
         self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
+        self.competition_index.save()
 
         comp = YourWordsCompetition.objects.get(slug='test-competition')
 
-        response = client.get('/Your-words-competition/test-competition/')
+        response = self.client.get(comp.url)
         self.assertContains(response, 'Test Competition')
         self.assertContains(response, 'This is the description')
 
     def test_translated_yourwords_competition_page_exists_section(self):
-        client = Client()
-        client.login(username='superuser', password='pass')
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
-        self.yourmind = self.mk_section(
-            self.section_index, title='Your mind')
+        section = self.mk_section(
+            SectionIndexPage.objects.child_of(self.main).first(),
+            title='test-section',
+            slug='test-section',
+        )
 
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description',
             slug='test-competition')
-        self.yourmind.add_child(instance=comp)
+
+        section.add_child(instance=comp)
         comp.save_revision().publish()
 
         self.client.post(reverse(
@@ -66,7 +64,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             slug='french-translation-of-test-competition')
         page.save_revision().publish()
 
-        response = self.client.get('/sections/your-mind/')
+        response = self.client.get(section.url)
         self.assertContains(response, 'Test Competition')
         self.assertContains(response, 'This is the description')
 
@@ -76,15 +74,17 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
 
         self.client.get('/locale/fr/')
 
-        response = self.client.get('/sections/your-mind/')
+        response = self.client.get(section.url)
         self.assertContains(response, page.title)
 
         response = self.client.get('/')
         self.assertContains(response, page.title)
 
     def test_yourwords_validation_for_fields(self):
-        client = Client()
-        client.login(username='superuser', password='pass')
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         comp = YourWordsCompetition(
             title='Test Competition',
@@ -95,27 +95,27 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
 
         comp = YourWordsCompetition.objects.get(slug='test-competition')
 
-        client.get(
+        self.client.get(
             reverse('molo.yourwords:competition_entry', args=[comp.slug]))
 
-        response = client.post(
+        response = self.client.post(
             reverse('molo.yourwords:competition_entry', args=[comp.slug]), {})
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, 'This field is required')
 
-        response = client.post(
+        response = self.client.post(
             reverse('molo.yourwords:competition_entry', args=[comp.slug]),
             {'story_name': 'this is a story'})
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, 'This field is required')
 
-        response = client.post(
+        response = self.client.post(
             reverse('molo.yourwords:competition_entry', args=[comp.slug]),
             {'story_name': 'This is a story', 'story_text': 'The text'})
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, 'This field is required')
 
-        response = client.post(
+        response = self.client.post(
             reverse('molo.yourwords:competition_entry', args=[comp.slug]), {
                 'story_name': 'This is a story',
                 'story_text': 'The text',
@@ -123,7 +123,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.assertEquals(response.status_code, 302)
         self.assertEquals(YourWordsCompetitionEntry.objects.all().count(), 1)
 
-        response = client.post(
+        response = self.client.post(
             reverse('molo.yourwords:competition_entry', args=[comp.slug]), {
                 'story_name': 'This is a story',
                 'story_text': 'The text',
@@ -133,8 +133,10 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.assertEquals(YourWordsCompetitionEntry.objects.all().count(), 2)
 
     def test_yourwords_thank_you_page(self):
-        client = Client()
-        client.login(username='superuser', password='pass')
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         comp = YourWordsCompetition(
             title='Test Competition',
@@ -143,7 +145,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
-        response = client.post(
+        response = self.client.post(
             reverse('molo.yourwords:competition_entry', args=[comp.slug]), {
                 'story_name': 'This is a story',
                 'story_text': 'The text',
@@ -153,8 +155,10 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             '/yourwords/thankyou/test-competition/')
 
     def test_translated_yourwords_competition_page_exists(self):
-        client = Client()
-        client.login(username='superuser', password='pass')
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         comp = YourWordsCompetition(
             title='Test Competition',
@@ -178,8 +182,10 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
                             % page.id)
 
     def test_translated_competition_entry_stored_against_the_main_lang(self):
-        client = Client()
-        client.login(username='superuser', password='pass')
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         en_comp = YourWordsCompetition(
             title='Test Competition',
@@ -194,7 +200,7 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
             slug='french-translation-of-test-competition')
         fr_comp.save_revision().publish()
 
-        client.post(
+        self.client.post(
             reverse('molo.yourwords:competition_entry', args=[fr_comp.slug]), {
                 'story_name': 'this is a french story',
                 'story_text': 'The text',
@@ -205,16 +211,18 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.assertEqual(entry.competition.id, en_comp.id)
 
     def test_yourwords_wagtail_competition_view(self):
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description')
         self.competition_index.add_child(instance=comp)
         comp.save_revision().publish()
 
-        client = Client()
-        client.login(username='superuser', password='pass')
-
-        response = client.get(
+        response = self.client.get(
             '/admin/yourwords/yourwordscompetition/'
         )
 
@@ -248,59 +256,54 @@ class TestYourWordsViewsTestCase(MoloTestCaseMixin, TestCase):
         self.assertContains(response, entry.story_name)
 
 
-class TestDeleteButtonRemoved(TestCase, MoloTestCaseMixin):
-
-    def setUp(self):
-        self.mk_main()
-        self.english = SiteLanguage.objects.create(locale='en')
-
-        self.login()
-
-        self.yr_words_comp_index = YourWordsCompetitionIndexPage(
-            title='Security Questions',
-            slug='security-questions')
-        self.main.add_child(instance=self.yr_words_comp_index)
-        self.yr_words_comp_index.save_revision().publish()
+class TestDeleteButtonRemoved(BaseYourWordsTestCase):
 
     def test_delete_btn_removed_for_yr_wrds_comp_index_page_in_main(self):
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         main_page = Main.objects.first()
         response = self.client.get('/admin/pages/{0}/'
                                    .format(str(main_page.pk)))
         self.assertEquals(response.status_code, 200)
 
-        yr_words_comp_index_page_title = (
-            YourWordsCompetitionIndexPage.objects.first().title)
-
         soup = BeautifulSoup(response.content, 'html.parser')
         index_page_rows = soup.find_all('tbody')[0].find_all('tr')
 
         for row in index_page_rows:
-            if row.h2.a.string == yr_words_comp_index_page_title:
+            if row.h2.a.string == self.competition_index.title:
                 self.assertTrue(row.find('a', string='Edit'))
                 self.assertFalse(row.find('a', string='Delete'))
 
     def test_delete_button_removed_from_dropdown_menu(self):
-        yr_wrds_comp_index_page = YourWordsCompetitionIndexPage.objects.first()
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         response = self.client.get('/admin/pages/{0}/'
-                                   .format(str(yr_wrds_comp_index_page.pk)))
+                                   .format(str(self.competition_index.pk)))
         self.assertEquals(response.status_code, 200)
 
         delete_link = ('<a href="/admin/pages/{0}/delete/" '
                        'title="Delete this page" class="u-link '
                        'is-live ">Delete</a>'
-                       .format(str(yr_wrds_comp_index_page.pk)))
+                       .format(str(self.competition_index.pk)))
         self.assertNotContains(response, delete_link, html=True)
 
     def test_delete_button_removed_in_edit_menu(self):
-        yr_wrds_comp_index_page = YourWordsCompetitionIndexPage.objects.first()
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
         response = self.client.get('/admin/pages/{0}/edit/'
-                                   .format(str(yr_wrds_comp_index_page.pk)))
+                                   .format(str(self.competition_index.pk)))
         self.assertEquals(response.status_code, 200)
 
         delete_button = ('<li><a href="/admin/pages/{0}/delete/" '
                          'class="shortcut">Delete</a></li>'
-                         .format(str(yr_wrds_comp_index_page.pk)))
+                         .format(str(self.competition_index.pk)))
         self.assertNotContains(response, delete_button, html=True)
