@@ -22,7 +22,7 @@ script:
   - cp molo/yourwords/test_templates/section_page.html testapp/testapp/templates/core/section_page.html
   - cp molo/yourwords/test_templates/section_listing_homepage.html testapp/testapp/templates/core/tags/section_listing_homepage.html
   - flake8 testapp
-  - testapp/./manage.py compress --settings=testapp.settings.production
+  - testapp/./manage.py compress --settings=testapp.settings.production --force
   - pip install -e testapp
   - py.test --cov=molo
 after_success:
