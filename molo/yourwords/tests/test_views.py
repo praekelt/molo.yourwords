@@ -1,19 +1,17 @@
-from django.test import TestCase
-from django.test.client import Client
+from bs4 import BeautifulSoup
+
 from django.core.urlresolvers import reverse
 
-from molo.core.tests.base import MoloTestCaseMixin
 from molo.core.models import (
-    SiteLanguage,
     Main,
     SectionIndexPage,
 )
-from molo.yourwords.tests.base import BaseYourWordsTestCase
-from molo.yourwords.models import (YourWordsCompetition,
-                                   YourWordsCompetitionEntry,
-                                   YourWordsCompetitionIndexPage)
 
-from bs4 import BeautifulSoup
+from molo.yourwords.tests.base import BaseYourWordsTestCase
+from molo.yourwords.models import (
+    YourWordsCompetition,
+    YourWordsCompetitionEntry,
+)
 
 
 class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
@@ -229,6 +227,7 @@ class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
         self.assertContains(response, comp.title)
 
     def test_yourwords_wagtail_entries_view(self):
+
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description')
@@ -246,10 +245,12 @@ class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
 
         entry = YourWordsCompetitionEntry.objects.all().first()
 
-        client = Client()
-        client.login(username='superuser', password='pass')
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
 
-        response = client.get(
+        response = self.client.get(
             '/admin/yourwords/yourwordscompetitionentry/'
         )
 

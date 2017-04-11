@@ -1,11 +1,9 @@
 import datetime
 
-
-from molo.yourwords.models import (YourWordsCompetition,
-                                   YourWordsCompetitionEntry,
-                                   YourWordsCompetitionIndexPage)
-
-from django.test.client import Client
+from molo.yourwords.models import (
+    YourWordsCompetition,
+    YourWordsCompetitionEntry,
+)
 from molo.yourwords.tests.base import BaseYourWordsTestCase
 
 

@@ -1,22 +1,26 @@
 import datetime
 
-from molo.core.models import SiteLanguage, ArticlePage
-from molo.core.tests.base import MoloTestCaseMixin
+from molo.core.models import ArticlePage
 
-from molo.yourwords.models import (YourWordsCompetition,
-                                   YourWordsCompetitionEntry,
-                                   YourWordsCompetitionIndexPage)
+from molo.yourwords.models import (
+    YourWordsCompetition,
+    YourWordsCompetitionEntry,
+)
 from molo.yourwords.admin import (
-    download_as_csv, YourWordsCompetitionEntryAdmin)
-
+    download_as_csv,
+    YourWordsCompetitionEntryAdmin
+)
 from molo.yourwords.tests.base import BaseYourWordsTestCase
-from django.test import TestCase, RequestFactory
-from django.test.client import Client
 
 
 class TestAdminActions(BaseYourWordsTestCase):
 
     def test_download_as_csv(self):
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description')
@@ -31,8 +35,6 @@ class TestAdminActions(BaseYourWordsTestCase):
             terms_or_conditions_approved=True,
             hide_real_name=True
         )
-        client = Client()
-        client.login(username='superuser', password='pass')
         response = download_as_csv(YourWordsCompetitionEntryAdmin,
                                    None,
                                    YourWordsCompetitionEntry.objects.all())
