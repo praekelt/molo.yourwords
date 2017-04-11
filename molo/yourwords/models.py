@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
+from django.dispatch import receiver
 
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore.fields import StreamField
@@ -12,22 +12,44 @@ from wagtail.wagtailadmin.edit_handlers import (
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from molo.core.blocks import MarkDownBlock
+from molo.core.utils import generate_slug
 from molo.core.models import (
     ArticlePage,
-    TranslatablePageMixin,
     SectionPage,
-    PreventDeleteMixin
+    PreventDeleteMixin,
+    TranslatablePageMixinNotRoutable,
+    PreventDeleteMixin,
+    Main,
+    index_pages_after_copy,
 )
 
 SectionPage.subpage_types += ['yourwords.YourWordsCompetition']
 
 
 class YourWordsCompetitionIndexPage(Page, PreventDeleteMixin):
-    parent_page_types = []
+    parent_page_types = ['core.Main']
     subpage_types = ['yourwords.YourWordsCompetition']
 
+    def copy(self, *args, **kwargs):
+        site = kwargs['to'].get_site()
+        main = site.root_page
+        YourWordsCompetitionIndexPage.objects.child_of(main).delete()
+        super(YourWordsCompetitionIndexPage, self).copy(*args, **kwargs)
 
-class YourWordsCompetition(TranslatablePageMixin, Page):
+
+
+@receiver(index_pages_after_copy, sender=Main)
+def create_yourwords_competition_index_page(sender, instance, **kwargs):
+    if not instance.get_children().filter(
+            title='Your words competitions').exists():
+        yourwords_competition_index = YourWordsCompetitionIndexPage(
+            title='Your words competitions', slug=('yourwords-%s' % (
+                generate_slug(instance.title), )))
+        instance.add_child(instance=yourwords_competition_index)
+        yourwords_competition_index.save_revision().publish()
+
+
+class YourWordsCompetition(TranslatablePageMixinNotRoutable, Page):
     subpage_types = ['yourwords.TermsAndConditions', 'yourwords.ThankYou']
     description = models.TextField(null=True, blank=True)
     image = models.ForeignKey(

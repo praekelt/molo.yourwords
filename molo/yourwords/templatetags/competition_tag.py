@@ -14,7 +14,8 @@ register = template.Library()
 def your_words_competition(context):
     context = copy(context)
     locale_code = context.get('locale_code')
-    page = YourWordsCompetitionIndexPage.objects.live().all().first()
+    main = context['request'].site.root_page
+    page = YourWordsCompetitionIndexPage.objects.child_of(main).live().first()
     if page:
         competitions = (
             YourWordsCompetition.objects.child_of(page).filter(
