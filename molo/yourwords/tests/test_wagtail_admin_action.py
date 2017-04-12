@@ -39,7 +39,6 @@ class TestWagtailAdminActions(BaseYourWordsTestCase):
             'competition,submission_date,user,story_name,story_text,'
             'terms_or_conditions_approved,hide_real_name,is_read,'
             'is_shortlisted,is_winner\r\n'
-            '7,{0},1,test,test body,1,1,0,0,0'.format(date)
+            '{0},{1},1,test,test body,1,1,0,0,0'.format(comp.pk, date)
         )
-
         self.assertContains(response, expected_output)
