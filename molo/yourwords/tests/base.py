@@ -7,9 +7,7 @@ from molo.core.models import (
     Languages
 )
 
-from molo.yourwords.models import (
-   YourWordsCompetitionIndexPage,
-)
+from molo.yourwords.models import YourWordsCompetitionIndexPage
 
 
 class BaseYourWordsTestCase(TestCase, MoloTestCaseMixin):

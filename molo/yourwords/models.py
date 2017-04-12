@@ -16,7 +16,6 @@ from molo.core.utils import generate_slug
 from molo.core.models import (
     ArticlePage,
     SectionPage,
-    PreventDeleteMixin,
     TranslatablePageMixinNotRoutable,
     PreventDeleteMixin,
     Main,
@@ -35,7 +34,6 @@ class YourWordsCompetitionIndexPage(Page, PreventDeleteMixin):
         main = site.root_page
         YourWordsCompetitionIndexPage.objects.child_of(main).delete()
         super(YourWordsCompetitionIndexPage, self).copy(*args, **kwargs)
-
 
 
 @receiver(index_pages_after_copy, sender=Main)
