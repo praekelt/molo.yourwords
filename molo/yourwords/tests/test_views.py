@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from molo.core.models import (
     Main,
     SectionIndexPage,
+    SectionPage,
 )
 
 from molo.yourwords.tests.base import BaseYourWordsTestCase
@@ -178,6 +179,40 @@ class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
         self.assertContains(response,
                             '<a href="/admin/pages/%s/edit/"'
                             % page.id)
+
+    def test_competition_multisite(self):
+        section = self.mk_section(
+            SectionIndexPage.objects.child_of(self.main).first(),
+            title='test-section',
+            slug='test-section',
+        )
+
+        comp = YourWordsCompetition(
+            title='Test Competition Main1',
+            description='This is the description')
+        section.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        section_main2 = self.mk_section(
+            SectionIndexPage.objects.child_of(self.main2).first(),
+            title='test-section',
+            slug='test-section',
+        )
+        comp_main2 = YourWordsCompetition(
+            title='Test Competition Main2',
+            description='This is the description')
+        section_main2.add_child(instance=comp_main2)
+        comp_main2.save_revision().publish()
+
+        self.assertEquals(2, SectionPage.objects.count())
+
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+        response = self.client.get(section.url)
+        self.assertContains(response, 'Test Competition Main1')
+        self.assertNotContains(response, 'Test Competition Main2')
 
     def test_translated_competition_entry_stored_against_the_main_lang(self):
         self.client.login(
