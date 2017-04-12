@@ -55,5 +55,4 @@ class BaseYourWordsTestCase(TestCase, MoloTestCaseMixin):
         self.competition_index_main2 = (YourWordsCompetitionIndexPage
                                         .objects.child_of(self.main2).first())
 
-        self.mk_main2(title='main3', slug='main3', path=00010003)
         self.client2 = Client(HTTP_HOST=self.main2.get_site().hostname)

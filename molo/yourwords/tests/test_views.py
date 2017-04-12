@@ -214,6 +214,16 @@ class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
         self.assertContains(response, 'Test Competition Main1')
         self.assertNotContains(response, 'Test Competition Main2')
 
+        self.client2.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+        print(section_main2.url)
+        response = self.client2.get(section_main2.url)
+
+        self.assertContains(response, 'Test Competition Main2')
+        self.assertNotContains(response, 'Test Competition Main1')
+
     def test_translated_competition_entry_stored_against_the_main_lang(self):
         self.client.login(
             username=self.superuser_name,
