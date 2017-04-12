@@ -74,9 +74,16 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
                     'is_winner', '_convert']
 
     list_filter = [('submission_date', DateFilter), 'is_read',
-                   'is_shortlisted', 'is_winner', 'competition__slug']
+                   'is_shortlisted', 'is_winner']
 
     search_fields = ('story_name',)
+
+    def get_queryset(self, request):
+        qs = super(YourWordsEntriesModelAdmin, self).get_queryset(request)
+        # Only show questions related to that site
+        main = request.site.root_page
+        parent_qs = YourWordsCompetition.objects.descendant_of(main)
+        return qs.filter(competition__in=parent_qs)
 
     def _convert(self, obj, *args, **kwargs):
         if obj.article_page:
@@ -108,10 +115,16 @@ class YourWordsModelAdmin(ModelAdmin, YourWordsCompetitionAdmin):
 
     search_fields = ('story_name',)
 
+    def get_queryset(self, request):
+        qs = super(YourWordsModelAdmin, self).get_queryset(request)
+        # Only show questions related to that site
+        main = request.site.root_page
+        return qs.descendant_of(main)
+
     def entries(self, obj, *args, **kwargs):
         url = '/admin/yourwords/yourwordscompetitionentry/'
-        return '<a href="%s?competition__slug=%s">%s</a>' % (
-            url, obj.slug, obj)
+        return (('<a href="{0}?competition__page_ptr__exact={1}">{2}</a>')
+                .format(url, obj.pk, obj))
 
     entries.allow_tags = True
     entries.short_description = 'Title'

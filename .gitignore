@@ -14,3 +14,4 @@ htmlcov/
 /the_app/
 
 .DS_Store
+.idea

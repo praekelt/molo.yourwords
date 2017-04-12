@@ -1,33 +1,26 @@
 import datetime
 
-from molo.core.models import SiteLanguage, ArticlePage
-from molo.core.tests.base import MoloTestCaseMixin
+from molo.core.models import ArticlePage
 
-from molo.yourwords.models import (YourWordsCompetition,
-                                   YourWordsCompetitionEntry,
-                                   YourWordsCompetitionIndexPage)
+from molo.yourwords.models import (
+    YourWordsCompetition,
+    YourWordsCompetitionEntry,
+)
 from molo.yourwords.admin import (
-    download_as_csv, YourWordsCompetitionEntryAdmin)
+    download_as_csv,
+    YourWordsCompetitionEntryAdmin
+)
+from molo.yourwords.tests.base import BaseYourWordsTestCase
 
-from django.test import TestCase, RequestFactory
-from django.test.client import Client
 
-
-class TestAdminActions(TestCase, MoloTestCaseMixin):
-
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.user = self.login()
-        self.mk_main()
-        # Creates Main language
-        self.english = SiteLanguage.objects.create(locale='en')
-        # Create competition index page
-        self.competition_index = YourWordsCompetitionIndexPage(
-            title='Your words competition', slug='Your-words-competition')
-        self.main.add_child(instance=self.competition_index)
-        self.competition_index.save_revision().publish()
+class TestAdminActions(BaseYourWordsTestCase):
 
     def test_download_as_csv(self):
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description')
@@ -42,8 +35,6 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
             terms_or_conditions_approved=True,
             hide_real_name=True
         )
-        client = Client()
-        client.login(username='superuser', password='pass')
         response = download_as_csv(YourWordsCompetitionEntryAdmin,
                                    None,
                                    YourWordsCompetitionEntry.objects.all())
@@ -59,6 +50,11 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
         self.assertEquals(str(response), expected_output)
 
     def test_convert_to_article(self):
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
         comp = YourWordsCompetition(
             title='Test Competition',
             description='This is the description')
@@ -73,9 +69,8 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
             terms_or_conditions_approved=True,
             hide_real_name=True
         )
-        client = Client()
-        client.login(username='superuser', password='pass')
-        response = client.get(
+
+        response = self.client.get(
             '/django-admin/yourwords/yourwordscompetitionentry/%d/convert/' %
             entry.id)
         article = ArticlePage.objects.get(title='test')
@@ -93,7 +88,7 @@ class TestAdminActions(TestCase, MoloTestCaseMixin):
             '/admin/pages/%d/move/' % article.id)
 
         # second time it should redirect to the edit page
-        response = client.get(
+        response = self.client.get(
             '/django-admin/yourwords/yourwordscompetitionentry/%d/convert/' %
             entry.id)
         self.assertEquals(
