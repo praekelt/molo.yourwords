@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+3.0.0-beta.1
+-----
+- Added multi-site functionality
+
 2.2.1
 -----
 - Fixed brken link for competitions in the admin, by allowing users to filter competition entries by competition slug
