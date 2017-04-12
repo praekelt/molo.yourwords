@@ -271,6 +271,43 @@ class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
 
         self.assertContains(response, comp.title)
 
+    def test_yourwords_wagtail_multisite_competition_view(self):
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
+        self.client2.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
+        comp = YourWordsCompetition(
+            title='Test Competition Main1',
+            description='This is the description')
+        self.competition_index.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        comp_main2 = YourWordsCompetition(
+            title='Test Competition Main2',
+            description='This is the description')
+        self.competition_index_main2.add_child(instance=comp_main2)
+        comp_main2.save_revision().publish()
+
+        response = self.client.get(
+            '/admin/yourwords/yourwordscompetition/'
+        )
+
+        self.assertContains(response, comp.title)
+        self.assertNotContains(response, comp_main2.title)
+
+        response = self.client2.get(
+            '/admin/yourwords/yourwordscompetition/'
+        )
+
+        self.assertNotContains(response, comp.title)
+        self.assertContains(response, comp_main2.title)
+
     def test_yourwords_wagtail_entries_view(self):
 
         comp = YourWordsCompetition(
@@ -300,6 +337,63 @@ class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
         )
 
         self.assertContains(response, entry.story_name)
+
+    def test_yourwords_multisite_wagtail_entries_view(self):
+
+        comp = YourWordsCompetition(
+            title='Test Competition',
+            description='This is the description')
+        self.competition_index.add_child(instance=comp)
+        comp.save_revision().publish()
+
+        comp_main2 = YourWordsCompetition(
+            title='Test Competition Main2',
+            description='This is the description')
+        self.competition_index_main2.add_child(instance=comp_main2)
+        comp_main2.save_revision().publish()
+
+        YourWordsCompetitionEntry.objects.create(
+            competition=comp,
+            user=self.user,
+            story_name='test main1',
+            story_text='test body main1',
+            terms_or_conditions_approved=True,
+            hide_real_name=True
+        )
+        entry_main1 = YourWordsCompetitionEntry.objects.all().first()
+
+        YourWordsCompetitionEntry.objects.create(
+            competition=comp_main2,
+            user=self.user,
+            story_name='test main2',
+            story_text='test body main2',
+            terms_or_conditions_approved=True,
+            hide_real_name=True
+        )
+        entry_main2 = YourWordsCompetitionEntry.objects.all().last()
+
+        self.client.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
+        response = self.client.get(
+            '/admin/yourwords/yourwordscompetitionentry/'
+        )
+
+        self.assertContains(response, entry_main1.story_name)
+        self.assertNotContains(response, entry_main2.story_name)
+
+        self.client2.login(
+            username=self.superuser_name,
+            password=self.superuser_password
+        )
+
+        response = self.client2.get(
+            '/admin/yourwords/yourwordscompetitionentry/'
+        )
+        self.assertContains(response, entry_main2.story_name)
+        self.assertNotContains(response, entry_main1.story_name)
 
 
 class TestDeleteButtonRemoved(BaseYourWordsTestCase):
