@@ -78,6 +78,13 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
 
     search_fields = ('story_name',)
 
+    def get_queryset(self, request):
+        qs = super(YourWordsEntriesModelAdmin, self).get_queryset(request)
+        # Only show questions related to that site
+        main = request.site.root_page
+        parent_qs = YourWordsCompetition.objects.descendant_of(main)
+        return qs.filter(competition__in=parent_qs)
+
     def _convert(self, obj, *args, **kwargs):
         if obj.article_page:
             return (
@@ -107,6 +114,12 @@ class YourWordsModelAdmin(ModelAdmin, YourWordsCompetitionAdmin):
                     'number_of_entries']
 
     search_fields = ('story_name',)
+
+    def get_queryset(self, request):
+        qs = super(YourWordsModelAdmin, self).get_queryset(request)
+        # Only show questions related to that site
+        main = request.site.root_page
+        return qs.descendant_of(main)
 
     def entries(self, obj, *args, **kwargs):
         url = '/admin/yourwords/yourwordscompetitionentry/'
