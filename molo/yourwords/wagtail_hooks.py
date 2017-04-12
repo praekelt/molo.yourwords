@@ -74,7 +74,7 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
                     'is_winner', '_convert']
 
     list_filter = [('submission_date', DateFilter), 'is_read',
-                   'is_shortlisted', 'is_winner', 'competition__slug']
+                   'is_shortlisted', 'is_winner', 'competition']
 
     search_fields = ('story_name',)
 
@@ -110,8 +110,8 @@ class YourWordsModelAdmin(ModelAdmin, YourWordsCompetitionAdmin):
 
     def entries(self, obj, *args, **kwargs):
         url = '/admin/yourwords/yourwordscompetitionentry/'
-        return '<a href="%s?competition__slug=%s">%s</a>' % (
-            url, obj.slug, obj)
+        return (('<a href="{0}?competition__page_ptr__exact={1}">{2}</a>')
+                .format(url, obj.pk, obj))
 
     entries.allow_tags = True
     entries.short_description = 'Title'
