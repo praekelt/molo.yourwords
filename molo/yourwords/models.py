@@ -144,8 +144,20 @@ class TermsAndConditions(ArticlePage):
         return YourWordsCompetition.objects.all().ancestor_of(self).last()
 
 
+TermsAndConditions.promote_panels = [
+    MultiFieldPanel(
+        Page.promote_panels,
+        "Common page configuration", "collapsible collapsed")]
+
+
 class ThankYou(ArticlePage):
     subpage_types = []
 
     def get_parent_page(self):
         return YourWordsCompetition.objects.all().ancestor_of(self).last()
+
+
+ThankYou.promote_panels = [
+    MultiFieldPanel(
+        Page.promote_panels,
+        "Common page configuration", "collapsible collapsed")]
