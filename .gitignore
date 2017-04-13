@@ -10,7 +10,6 @@ htmlcov/
 .coverage*
 .cache
 *.sqlite3
-
 /the_app/
 
 .DS_Store
