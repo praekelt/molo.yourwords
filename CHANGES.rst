@@ -5,6 +5,10 @@ CHANGE LOG
 -----
 - Added multi-site functionality
 
+2.2.2
+-----
+- Remove promotion settings from Ts&Cs and thank you page
+
 2.2.1
 -----
 - Fixed brken link for competitions in the admin, by allowing users to filter competition entries by competition slug
