@@ -14,11 +14,15 @@ install:
   - pip install -e . --cache-dir $HOME/.pip-cache/
 script:
   - flake8 molo
-  - molo scaffold testapp --include molo.yourwords ^yourwords/ --include molo.profiles ^profiles/
+  - molo scaffold testapp --include molo.yourwords ^yourwords/
+  - mkdir testapp/testapp/templates/
+  - mkdir testapp/testapp/templates/core/
+  - mkdir testapp/testapp/templates/core/tags/
+  - cp test_settings.py testapp/testapp/settings/local.py
   - cp molo/yourwords/test_templates/section_page.html testapp/testapp/templates/core/section_page.html
   - cp molo/yourwords/test_templates/section_listing_homepage.html testapp/testapp/templates/core/tags/section_listing_homepage.html
-  - pip install molo.profiles
   - flake8 testapp
+  - testapp/./manage.py compress --settings=testapp.settings.production --force
   - pip install -e testapp
   - py.test --cov=molo
 after_success:

@@ -1,6 +1,31 @@
 CHANGE LOG
 ==========
 
+5.0.0
+-----
+- Added multi-site functionality
+
+2.2.2
+-----
+- Remove promotion settings from Ts&Cs and thank you page
+
+2.2.1
+-----
+- Fixed brken link for competitions in the admin, by allowing users to filter competition entries by competition slug
+
+2.2.0
+-----
+- Added Your Words view to Wagtail Admin
+
+2.1.0
+-----
+- Removed ability to delete YourWords Competition IndexPage in the Admin UI
+
+2.0.0
+-----
+- Upgraded dependency to molo v4
+- Fixed bug in converting yourwords entry to an article
+
 1.2.2
 -----
 - Add yourwords permission to groups
