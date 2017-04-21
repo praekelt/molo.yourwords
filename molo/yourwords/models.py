@@ -48,6 +48,8 @@ def create_yourwords_competition_index_page(sender, instance, **kwargs):
 
 
 class YourWordsCompetition(TranslatablePageMixinNotRoutable, Page):
+    parent_page_types = [
+        'yourwords.YourWordsCompetitionIndexPage', 'core.SectionPage']
     subpage_types = ['yourwords.TermsAndConditions', 'yourwords.ThankYou']
     description = models.TextField(null=True, blank=True)
     image = models.ForeignKey(
@@ -158,6 +160,7 @@ class YourWordsCompetitionEntry(models.Model):
 
 
 class TermsAndConditions(ArticlePage):
+    parent_page_types = ['yourwords.YourWordsCompetition']
     subpage_types = []
 
     def get_parent_page(self):
@@ -171,6 +174,7 @@ TermsAndConditions.promote_panels = [
 
 
 class ThankYou(ArticlePage):
+    parent_page_types = ['yourwords.YourWordsCompetition']
     subpage_types = []
 
     def get_parent_page(self):
