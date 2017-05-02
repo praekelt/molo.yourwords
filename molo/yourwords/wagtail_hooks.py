@@ -45,7 +45,9 @@ class ModelAdminTemplate(IndexView):
             'is_winner': is_winner__exact
         }
 
-        arguments = {}
+        arguments = {
+            'competition__in':
+            YourWordsCompetition.objects.descendant_of(request.site.root_page)}
 
         for key, value in filter_list.items():
             if value:
