@@ -218,7 +218,6 @@ class TestYourWordsViewsTestCase(BaseYourWordsTestCase):
             username=self.superuser_name,
             password=self.superuser_password
         )
-        print(section_main2.url)
         response = self.client2.get(section_main2.url)
 
         self.assertContains(response, 'Test Competition Main2')
