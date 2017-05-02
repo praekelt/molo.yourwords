@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+5.0.1
+-----
+- Bug Fix: Only show entries specific to site
+
 5.0.0
 -----
 - Added multi-site functionality
