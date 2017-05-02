@@ -1,9 +1,17 @@
 CHANGE LOG
 ==========
 
-3.0.0-beta.1
+5.0.1
+-----
+- Bug Fix: Only show entries specific to site
+
+5.0.0
 -----
 - Added multi-site functionality
+
+2.2.2
+-----
+- Remove promotion settings from Ts&Cs and thank you page
 
 2.2.1
 -----

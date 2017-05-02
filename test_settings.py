@@ -29,6 +29,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'molo.core.context_processors.locale',
+                'molo.core.processors.compress_settings',
                 'wagtail.contrib.settings.context_processors.settings',
             ],
             "loaders": [
