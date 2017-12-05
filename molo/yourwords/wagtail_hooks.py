@@ -48,7 +48,6 @@ class ModelAdminTemplate(IndexView):
         arguments = {
             'competition__in':
             YourWordsCompetition.objects.descendant_of(request.site.root_page)}
-
         for key, value in filter_list.items():
             if value:
                 arguments[key] = value

@@ -2,7 +2,7 @@ import json
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import admin
-from django.conf.urls import patterns
+from django.conf.urls import url
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import truncatechars
 from django.shortcuts import get_object_or_404, redirect
@@ -90,9 +90,9 @@ class YourWordsCompetitionEntryAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(YourWordsCompetitionEntryAdmin, self).get_urls()
-        entry_urls = patterns(
-            '', (r'^(?P<entry_id>\d+)/convert/$', convert_to_article)
-        )
+        entry_urls = [
+            url(r'^(?P<entry_id>\d+)/convert/$', convert_to_article),
+        ]
         return entry_urls + urls
 
     def _convert(self, obj, *args, **kwargs):
