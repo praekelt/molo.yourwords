@@ -51,10 +51,10 @@ class TestWagtailAdminActions(BaseYourWordsTestCase):
         date = str(datetime.datetime.now().date())
 
         expected_output = (
-            'competition,submission_date,user,story_name,story_text,'
+            'country,competition,submission_date,user,story_name,story_text,'
             'terms_or_conditions_approved,hide_real_name,is_read,'
             'is_shortlisted,is_winner\r\n'
-            '{0},{1},1,test,test body,1,1,0,0,0'.format(comp.pk, date)
+            'Main,{0},{1},1,test,test body,1,1,0,0,0'.format(comp.pk, date)
         )
         self.assertContains(response, expected_output)
 
@@ -68,9 +68,9 @@ class TestWagtailAdminActions(BaseYourWordsTestCase):
         date = str(datetime.datetime.now().date())
 
         expected_output = (
-            'competition,submission_date,user,story_name,story_text,'
+            'country,competition,submission_date,user,story_name,story_text,'
             'terms_or_conditions_approved,hide_real_name,is_read,'
             'is_shortlisted,is_winner\r\n'
-            '{0},{1},1,test2,test body2,1,1,0,0,0'.format(comp2.pk, date)
+            'Main,{0},{1},1,test2,test body2,1,1,0,0,0'.format(comp2.pk, date)
         )
         self.assertContains(response, expected_output)
