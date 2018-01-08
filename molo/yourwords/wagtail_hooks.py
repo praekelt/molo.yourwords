@@ -1,9 +1,14 @@
 from daterange_filter.filter import DateRangeFilter
+
 from django.http import HttpResponse
+
+from import_export.fields import Field
 from import_export import resources
+
 from molo.yourwords.admin import YourWordsCompetitionAdmin
 from molo.yourwords.models import YourWordsCompetitionEntry, \
     YourWordsCompetition
+
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin,
     modeladmin_register,
@@ -17,9 +22,14 @@ class DateFilter(DateRangeFilter):
 
 
 class YourWordsEntriesResource(resources.ModelResource):
+    country = Field()
+
     class Meta:
         model = YourWordsCompetitionEntry
         exclude = ('id', '_convert', 'article_page')
+
+    def dehydrate_country(self, entry):
+        return entry.user.profile.site.root_page.title
 
 
 class ModelAdminTemplate(IndexView):
@@ -72,7 +82,7 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
     add_to_settings_menu = False
     list_display = ['story_name', 'user', 'hide_real_name',
                     'submission_date', 'is_read', 'is_shortlisted',
-                    'is_winner', '_convert']
+                    'is_winner', '_convert', 'country']
 
     list_filter = [('submission_date', DateFilter), 'is_read',
                    'is_shortlisted', 'is_winner']
@@ -85,6 +95,9 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
         main = request.site.root_page
         parent_qs = YourWordsCompetition.objects.descendant_of(main)
         return qs.filter(competition__in=parent_qs)
+
+    def country(self, obj):
+        return obj.user.profile.site.root_page.title
 
     def _convert(self, obj, *args, **kwargs):
         if obj.article_page:

@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.0.1
+-----
+- added country to csv
+
 6.0.0
 -----
 - Official release for YourWords 6.0.0
