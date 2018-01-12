@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.1.0
+-----
+- add support for Django 1.11
+
 6.0.1
 -----
 - added country to csv
