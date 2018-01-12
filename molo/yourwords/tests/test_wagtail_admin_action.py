@@ -59,6 +59,8 @@ class TestWagtailAdminActions(BaseYourWordsTestCase):
         self.assertContains(response, expected_output)
 
         client = Client(HTTP_HOST=self.site2.hostname)
+        client.login(
+            username=self.superuser_name, password=self.superuser_password)
         response = client.post('/admin/login/', {
             'username': 'superuser',
             'password': 'pass'
