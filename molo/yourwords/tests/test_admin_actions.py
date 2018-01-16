@@ -45,7 +45,7 @@ class TestAdminActions(BaseYourWordsTestCase):
                            'is_winner,article_page\r\n1,Test Competition,' +
                            date + ',superuser,test,test body,'
                            'True,True,False,False,False,\r\n')
-        self.assertEquals(response.content.decode("utf-8"), expected_output)
+        self.assertContains(response, expected_output)
 
     def test_convert_to_article(self):
         self.client.login(
