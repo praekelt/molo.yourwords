@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.2.1
+-----
+- fix PyPI classifier
+
 6.2.0
 -----
 - add support for Python 3
