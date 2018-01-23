@@ -15,8 +15,9 @@ class CompetitionEntry(CreateView):
     def get_context_data(self, *args, **kwargs):
         context = super(
             CompetitionEntry, self).get_context_data(*args, **kwargs)
-        competition = get_object_or_404(
-            YourWordsCompetition, slug=self.kwargs.get('slug'))
+        site = self.request.site
+        competition = YourWordsCompetition.objects.descendant_of(
+            site.root_page).filter(slug=self.kwargs.get('slug')).first()
         context.update({'competition': competition})
         return context
 
