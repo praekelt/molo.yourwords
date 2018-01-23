@@ -29,7 +29,9 @@ class YourWordsEntriesResource(resources.ModelResource):
         exclude = ('id', '_convert', 'article_page')
 
     def dehydrate_country(self, entry):
-        return entry.user.profile.site.root_page.title
+        if hasattr(entry.user.profile, 'site'):
+            return entry.user.profile.site.root_page.title
+        return entry.competition.get_site().root_page.title
 
 
 class ModelAdminTemplate(IndexView):
@@ -97,7 +99,9 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
         return qs.filter(competition__in=parent_qs)
 
     def country(self, obj):
-        return obj.user.profile.site.root_page.title
+        if hasattr(obj.user.profile, 'site'):
+            return obj.user.profile.site.root_page.title
+        return obj.competition.get_site().root_page.title
 
     def _convert(self, obj, *args, **kwargs):
         if obj.article_page:
