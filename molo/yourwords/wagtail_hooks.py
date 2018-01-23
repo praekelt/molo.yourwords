@@ -30,7 +30,7 @@ class YourWordsEntriesResource(resources.ModelResource):
 
     def dehydrate_country(self, entry):
         if hasattr(entry.user.profile, 'site') and \
-                entry.user.profile is not None:
+                entry.user.profile.site is not None:
             return entry.user.profile.site.root_page.title
         return entry.competition.get_site().root_page.title
 
