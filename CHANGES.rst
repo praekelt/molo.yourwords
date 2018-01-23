@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.2.4
+-----
+- bug fix: return entry site when user profile has no site or site is none
+
 6.2.3
 -----
 - bug fix: return entry site when user profile has no site
