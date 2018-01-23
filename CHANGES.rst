@@ -1,6 +1,19 @@
 CHANGE LOG
 ==========
 
+6.2.2
+-----
+- bug fix: only use get_object_or_404 with pks
+
+6.2.1
+-----
+- fix PyPI classifier
+
+6.2.0
+-----
+- add support for Python 3
+- template improvements: compress images, improve date picker
+
 6.1.0
 -----
 - add support for Django 1.11

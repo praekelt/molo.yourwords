@@ -18,7 +18,11 @@
             <div class="row">
                 <div class="left">
                     <div class="col">
-                        {% block h1 %}<h1 {% if view.header_icon %}class="icon icon-{{ view.header_icon }}"{% endif %}>{{ view.get_page_title }}<span></span></h1>{% endblock %}
+                        {% block h1 %}
+                        <h1 {% if view.header_icon %}class="icon icon-{{ view.header_icon }}"{% endif %}>
+                            {{ view.get_page_title }}
+                            <span></span>
+                        </h1>{% endblock %}
                     </div>
                     {% block search %}{% search_form %}{% endblock %}
                 </div>
@@ -27,10 +31,9 @@
     {% endblock %}
 
     {% block content_main %}
-        <div>
+        <div class="row__container">
             <div class="row">
                 {% block content_cols %}
-
                     {% block filters %}
                         {% if view.has_filters and all_count %}
                         <div class="changelist-filter col3">
@@ -75,10 +78,8 @@
                             {% endif %}
                         </div>
                     {% endblock %}
-
                 {% endblock %}
             </div>
         </div>
     {% endblock %}
-
 {% endblock %}

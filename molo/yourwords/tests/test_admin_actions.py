@@ -39,15 +39,13 @@ class TestAdminActions(BaseYourWordsTestCase):
                                    None,
                                    YourWordsCompetitionEntry.objects.all())
         date = str(datetime.datetime.now().date())
-        expected_output = ('Content-Type: text/csv\r\nContent-Disposition:'
-                           ' attachment;filename=export.csv\r\n\r\nid,'
-                           'competition,submission_date,user,story_name,'
+        expected_output = ('id,competition,submission_date,user,story_name,'
                            'story_text,terms_or_conditions_approved,'
                            'hide_real_name,is_read,is_shortlisted,'
                            'is_winner,article_page\r\n1,Test Competition,' +
                            date + ',superuser,test,test body,'
                            'True,True,False,False,False,\r\n')
-        self.assertEquals(str(response), expected_output)
+        self.assertContains(response, expected_output)
 
     def test_convert_to_article(self):
         self.client.login(
