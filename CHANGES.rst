@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.2.2
+-----
+- bug fix: only use get_object_or_404 with pks
+
 6.2.1
 -----
 - fix PyPI classifier
