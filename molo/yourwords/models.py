@@ -21,11 +21,12 @@ from molo.core.models import (
     Main,
     index_pages_after_copy,
 )
+from molo.core.molo_wagtail_models import MoloPage
 
 SectionPage.subpage_types += ['yourwords.YourWordsCompetition']
 
 
-class YourWordsCompetitionIndexPage(Page, PreventDeleteMixin):
+class YourWordsCompetitionIndexPage(MoloPage, PreventDeleteMixin):
     parent_page_types = ['core.Main']
     subpage_types = ['yourwords.YourWordsCompetition']
 
@@ -47,7 +48,7 @@ def create_yourwords_competition_index_page(sender, instance, **kwargs):
         yourwords_competition_index.save_revision().publish()
 
 
-class YourWordsCompetition(TranslatablePageMixinNotRoutable, Page):
+class YourWordsCompetition(TranslatablePageMixinNotRoutable, MoloPage):
     parent_page_types = [
         'yourwords.YourWordsCompetitionIndexPage', 'core.SectionPage']
     subpage_types = ['yourwords.TermsAndConditions', 'yourwords.ThankYou']
