@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.3.0
+-----
+- Replace Page with MoloPage proxy
+
 6.2.5
 -----
 - bug fix: return entry site when user profile has no site or site is none
