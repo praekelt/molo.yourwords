@@ -51,14 +51,16 @@ class TestWagtailAdminActions(BaseYourWordsTestCase):
         date = str(datetime.datetime.now().date())
 
         expected_output = (
-            'competition,submission_date,user,story_name,story_text,'
+            'country,competition,submission_date,user,story_name,story_text,'
             'terms_or_conditions_approved,hide_real_name,is_read,'
             'is_shortlisted,is_winner\r\n'
-            '{0},{1},1,test,test body,1,1,0,0,0'.format(comp.pk, date)
+            'Main,{0},{1},1,test,test body,1,1,0,0,0'.format(comp.pk, date)
         )
         self.assertContains(response, expected_output)
 
         client = Client(HTTP_HOST=self.site2.hostname)
+        client.login(
+            username=self.superuser_name, password=self.superuser_password)
         response = client.post('/admin/login/', {
             'username': 'superuser',
             'password': 'pass'
@@ -68,9 +70,9 @@ class TestWagtailAdminActions(BaseYourWordsTestCase):
         date = str(datetime.datetime.now().date())
 
         expected_output = (
-            'competition,submission_date,user,story_name,story_text,'
+            'country,competition,submission_date,user,story_name,story_text,'
             'terms_or_conditions_approved,hide_real_name,is_read,'
             'is_shortlisted,is_winner\r\n'
-            '{0},{1},1,test2,test body2,1,1,0,0,0'.format(comp2.pk, date)
+            'Main,{0},{1},1,test2,test body2,1,1,0,0,0'.format(comp2.pk, date)
         )
         self.assertContains(response, expected_output)

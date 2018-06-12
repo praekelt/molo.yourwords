@@ -1,9 +1,14 @@
 from daterange_filter.filter import DateRangeFilter
+
 from django.http import HttpResponse
+
+from import_export.fields import Field
 from import_export import resources
+from wagtail.wagtailcore import hooks
 from molo.yourwords.admin import YourWordsCompetitionAdmin
 from molo.yourwords.models import YourWordsCompetitionEntry, \
     YourWordsCompetition
+
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin,
     modeladmin_register,
@@ -17,9 +22,17 @@ class DateFilter(DateRangeFilter):
 
 
 class YourWordsEntriesResource(resources.ModelResource):
+    country = Field()
+
     class Meta:
         model = YourWordsCompetitionEntry
         exclude = ('id', '_convert', 'article_page')
+
+    def dehydrate_country(self, entry):
+        if hasattr(entry.user.profile, 'site') and \
+                entry.user.profile.site is not None:
+            return entry.user.profile.site.root_page.title
+        return entry.competition.get_site().root_page.title
 
 
 class ModelAdminTemplate(IndexView):
@@ -48,7 +61,6 @@ class ModelAdminTemplate(IndexView):
         arguments = {
             'competition__in':
             YourWordsCompetition.objects.descendant_of(request.site.root_page)}
-
         for key, value in filter_list.items():
             if value:
                 arguments[key] = value
@@ -73,7 +85,7 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
     add_to_settings_menu = False
     list_display = ['story_name', 'user', 'hide_real_name',
                     'submission_date', 'is_read', 'is_shortlisted',
-                    'is_winner', '_convert']
+                    'is_winner', '_convert', 'country']
 
     list_filter = [('submission_date', DateFilter), 'is_read',
                    'is_shortlisted', 'is_winner']
@@ -86,6 +98,12 @@ class YourWordsEntriesModelAdmin(ModelAdmin):
         main = request.site.root_page
         parent_qs = YourWordsCompetition.objects.descendant_of(main)
         return qs.filter(competition__in=parent_qs)
+
+    def country(self, obj):
+        if hasattr(obj.user.profile, 'site') and \
+                obj.user.profile.site is not None:
+            return obj.user.profile.site.root_page.title
+        return obj.competition.get_site().root_page.title
 
     def _convert(self, obj, *args, **kwargs):
         if obj.article_page:
@@ -140,3 +158,10 @@ class YourWordsAdminGroup(ModelAdminGroup):
 
 
 modeladmin_register(YourWordsAdminGroup)
+
+
+@hooks.register('construct_main_menu')
+def show_yourwords_entries_for_users_have_access(request, menu_items):
+    if not request.user.has_perm('yourwords.can_view_entry'):
+        menu_items[:] = [
+            item for item in menu_items if item.name != 'yourwords']
