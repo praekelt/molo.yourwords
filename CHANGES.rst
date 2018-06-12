@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.4.0
+-----
+- Only show yourwords modeladmin to users that have yourwords can_view_entry permission
+
 6.3.0
 -----
 - Replace Page with MoloPage proxy
