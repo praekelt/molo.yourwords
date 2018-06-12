@@ -159,7 +159,7 @@ class YourWordsCompetitionEntry(models.Model):
         verbose_name = 'YourWords Competition Entry'
         verbose_name_plural = 'YourWords Competition Entries'
         permissions = (
-            ("can_view_entry", "Can view Entry"),
+            ("can_view_yourwords_entry", "Can View YourWords Entry"),
         )
 
 

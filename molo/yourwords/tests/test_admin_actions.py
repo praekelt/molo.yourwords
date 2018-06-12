@@ -124,7 +124,8 @@ class TestAdminPermission(TestCase, MoloTestCaseMixin):
         )
         # Create yourwords view entrie permission
         self.yourwords = Permission.objects.get(
-            content_type=yourwords_content_type, codename='can_view_entry')
+            content_type=yourwords_content_type,
+            codename='can_view_yourwords_entry')
         # create a group
         self.test_group, _ = Group.objects.get_or_create(name='Test group')
         self.test_group.permissions.add(access_admin)
@@ -148,7 +149,7 @@ class TestAdminPermission(TestCase, MoloTestCaseMixin):
 
         # User shoudn't see the yourwords model admin
         self.assertTrue(user.has_perm('wagtailadmin.access_admin'))
-        self.assertFalse(user.has_perm('yourwords.can_view_entry'))
+        self.assertFalse(user.has_perm('yourwords.can_view_yourwords_entry'))
         response = self.client.get('/admin/')
         self.assertEquals(response.status_code, 200)
         self.assertNotContains(
@@ -158,7 +159,7 @@ class TestAdminPermission(TestCase, MoloTestCaseMixin):
         self.test_group.permissions.add(self.yourwords)
         user = User.objects.filter(username='username').first()
         self.assertTrue(user.has_perm('wagtailadmin.access_admin'))
-        self.assertTrue(user.has_perm('yourwords.can_view_entry'))
+        self.assertTrue(user.has_perm('yourwords.can_view_yourwords_entry'))
         response = self.client.get('/admin/')
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, '/admin/yourwords/yourwordscompetition/')

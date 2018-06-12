@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='yourwordscompetitionentry',
-            options={'permissions': (('can_view_entry', 'Can view Entry'),), 'verbose_name': 'YourWords Competition Entry', 'verbose_name_plural': 'YourWords Competition Entries'},
+            options={'permissions': (('can_view_yourwords_entry', 'Can View YourWords Entry'),), 'verbose_name': 'YourWords Competition Entry', 'verbose_name_plural': 'YourWords Competition Entries'},
         ),
         migrations.AlterField(
             model_name='yourwordscompetition',

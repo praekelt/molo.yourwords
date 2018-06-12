@@ -162,6 +162,6 @@ modeladmin_register(YourWordsAdminGroup)
 
 @hooks.register('construct_main_menu')
 def show_yourwords_entries_for_users_have_access(request, menu_items):
-    if not request.user.has_perm('yourwords.can_view_entry'):
+    if not request.user.has_perm('yourwords.can_view_yourwords_entry'):
         menu_items[:] = [
             item for item in menu_items if item.name != 'yourwords']
