@@ -1,9 +1,15 @@
 CHANGE LOG
 ==========
 
+6.4.1
+-----
+- Change code name can_view_entry to can_view_yourwords_entry
+
 6.4.0
 -----
+NOTE: Please use 6.4.1 instead
 - Only show yourwords modeladmin to users that have yourwords can_view_entry permission
+
 
 6.3.0
 -----
