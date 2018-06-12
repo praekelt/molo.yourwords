@@ -158,6 +158,9 @@ class YourWordsCompetitionEntry(models.Model):
     class Meta:
         verbose_name = 'YourWords Competition Entry'
         verbose_name_plural = 'YourWords Competition Entries'
+        permissions = (
+            ("can_view_entry", "Can view Entry"),
+        )
 
 
 class TermsAndConditions(ArticlePage):
