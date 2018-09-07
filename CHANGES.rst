@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+6.4.2
+-----
+- Add translation fields to translatatable molo pages
+
 6.4.0
 -----
 - Only show yourwords modeladmin to users that have yourwords can_view_entry permission
