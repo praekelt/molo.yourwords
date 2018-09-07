@@ -1,6 +1,64 @@
 CHANGE LOG
 ==========
 
+6.4.2
+-----
+- Add translation fields to translatatable molo pages
+
+6.4.0
+-----
+- Only show yourwords modeladmin to users that have yourwords can_view_entry permission
+
+6.3.0
+-----
+- Replace Page with MoloPage proxy
+
+6.2.5
+-----
+- bug fix: return entry site when user profile has no site or site is none
+
+6.2.4
+-----
+- bug fix: return entry site when user profile has no site or site is none
+
+6.2.3
+-----
+- bug fix: return entry site when user profile has no site
+
+6.2.2
+-----
+- bug fix: only use get_object_or_404 with pks
+
+6.2.1
+-----
+- fix PyPI classifier
+
+6.2.0
+-----
+- add support for Python 3
+- template improvements: compress images, improve date picker
+
+6.1.0
+-----
+- add support for Django 1.11
+
+6.0.1
+-----
+- added country to csv
+
+6.0.0
+-----
+- Official release for YourWords 6.0.0
+- Dropped support for Django 1.10
+
+6.0.1-beta.1
+------------
+- Upgrade to Django 1.10, Molo 6x
+
+6.0.0-beta.1
+------------
+- Upgrade to Django 1.10, Molo 6x
+
 5.0.1
 -----
 - Bug Fix: Only show entries specific to site
