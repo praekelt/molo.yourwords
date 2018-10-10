@@ -19,7 +19,7 @@ def your_words_competition(context):
     if page:
         competitions = (
             YourWordsCompetition.objects.child_of(page).filter(
-                languages__language__is_main_language=True).specific())
+                language__is_main_language=True).specific())
     else:
         competitions = YourWordsCompetition.objects.none()
 
@@ -40,7 +40,7 @@ def your_words_competition_in_section(context, section):
     if page:
         competitions = (
             YourWordsCompetition.objects.child_of(page).filter(
-                languages__language__is_main_language=True).specific())
+                language__is_main_language=True).specific())
     else:
         competitions = YourWordsCompetition.objects.none()
 
@@ -58,7 +58,7 @@ def load_thank_you_page_for_competition(context, competition):
     locale = context.get('locale_code')
 
     qs = ThankYou.objects.child_of(page).filter(
-        languages__language__is_main_language=True)
+        language__is_main_language=True)
 
     if not locale:
         return qs

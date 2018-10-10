@@ -1,6 +1,18 @@
 CHANGE LOG
 ==========
 
+7.0.0
+-----
+- Supports Molo 7
+
+6.4.2
+-----
+- Add translation fields to translatatable molo pages
+
+6.4.0
+-----
+- Only show yourwords modeladmin to users that have yourwords can_view_entry permission
+
 6.3.0
 -----
 - Replace Page with MoloPage proxy

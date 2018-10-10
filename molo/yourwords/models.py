@@ -52,6 +52,12 @@ class YourWordsCompetition(TranslatablePageMixinNotRoutable, MoloPage):
     parent_page_types = [
         'yourwords.YourWordsCompetitionIndexPage', 'core.SectionPage']
     subpage_types = ['yourwords.TermsAndConditions', 'yourwords.ThankYou']
+    language = models.ForeignKey('core.SiteLanguage',
+                                 blank=True,
+                                 null=True,
+                                 on_delete=models.SET_NULL,
+                                 )
+    translated_pages = models.ManyToManyField("self", blank=True)
     description = models.TextField(null=True, blank=True)
     image = models.ForeignKey(
         'wagtailimages.Image',
@@ -158,6 +164,9 @@ class YourWordsCompetitionEntry(models.Model):
     class Meta:
         verbose_name = 'YourWords Competition Entry'
         verbose_name_plural = 'YourWords Competition Entries'
+        permissions = (
+            ("can_view_yourwords_entry", "Can View YourWords Entry"),
+        )
 
 
 class TermsAndConditions(ArticlePage):
