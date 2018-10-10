@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+7.0.0
+-----
+- Supports Molo 7
+
 6.4.2
 -----
 - Add translation fields to translatatable molo pages
