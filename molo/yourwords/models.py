@@ -2,14 +2,14 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 
-from wagtail.wagtailcore.models import Page
-from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailimages.blocks import ImageChooserBlock
-from wagtail.wagtailadmin.edit_handlers import (
+from wagtail.core.models import Page
+from wagtail.core.fields import StreamField
+from wagtail.core import blocks
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.admin.edit_handlers import (
     FieldPanel, StreamFieldPanel, FieldRowPanel,
     MultiFieldPanel)
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 from molo.core.blocks import MarkDownBlock
 from molo.core.utils import generate_slug
