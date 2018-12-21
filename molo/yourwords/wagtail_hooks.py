@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 from import_export.fields import Field
 from import_export import resources
-from wagtail.wagtailcore import hooks
+from wagtail.core import hooks
 from molo.yourwords.admin import YourWordsCompetitionAdmin
 from molo.yourwords.models import YourWordsCompetitionEntry, \
     YourWordsCompetition

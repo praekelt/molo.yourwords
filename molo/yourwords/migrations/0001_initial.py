@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import molo.core.blocks
-import wagtail.wagtailcore.fields
-import wagtail.wagtailimages.blocks
+import wagtail.core.fields
+import wagtail.images.blocks
 from django.conf import settings
 import django.db.models.deletion
-import wagtail.wagtailcore.blocks
+import wagtail.core.blocks
 
 
 class Migration(migrations.Migration):
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('description', models.TextField(null=True, blank=True)),
-                ('content', wagtail.wagtailcore.fields.StreamField([(b'heading', wagtail.wagtailcore.blocks.CharBlock(classname=b'full title')), (b'paragraph', molo.core.blocks.MarkDownBlock()), (b'image', wagtail.wagtailimages.blocks.ImageChooserBlock()), (b'list', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.CharBlock(label=b'Item'))), (b'numbered_list', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.CharBlock(label=b'Item'))), (b'page', wagtail.wagtailcore.blocks.PageChooserBlock())], null=True, blank=True)),
+                ('content', wagtail.core.fields.StreamField([(b'heading', wagtail.core.blocks.CharBlock(classname=b'full title')), (b'paragraph', molo.core.blocks.MarkDownBlock()), (b'image', wagtail.images.blocks.ImageChooserBlock()), (b'list', wagtail.core.blocks.ListBlock(wagtail.core.blocks.CharBlock(label=b'Item'))), (b'numbered_list', wagtail.core.blocks.ListBlock(wagtail.core.blocks.CharBlock(label=b'Item'))), (b'page', wagtail.core.blocks.PageChooserBlock())], null=True, blank=True)),
                 ('start_date', models.DateTimeField(null=True, blank=True)),
                 ('end_date', models.DateTimeField(null=True, blank=True)),
                 ('extra_style_hints', models.TextField(default=b'', help_text='Styling options that can be applied to this section and all its descendants', null=True, blank=True)),

@@ -10,7 +10,7 @@ from django import forms
 import csv
 from django.http import HttpResponse
 
-from wagtail.wagtailcore.utils import cautious_slugify
+from wagtail.core.utils import cautious_slugify
 
 from molo.core.models import ArticlePage
 from molo.yourwords.models import (YourWordsCompetitionEntry,
