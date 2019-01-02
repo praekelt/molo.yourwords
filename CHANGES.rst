@@ -1,6 +1,11 @@
 CHANGE LOG
 ==========
 
+7.1.0
+-----
+-Upgrade to wagtail 2
+-Drop support for python 2 
+
 7.0.0
 -----
 - Supports Molo 7
