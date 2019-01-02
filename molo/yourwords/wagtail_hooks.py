@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 from import_export.fields import Field
 from import_export import resources
-from wagtail.wagtailcore import hooks
+from wagtail.core import hooks
 from molo.yourwords.admin import YourWordsCompetitionAdmin
 from molo.yourwords.models import YourWordsCompetitionEntry, \
     YourWordsCompetition
@@ -51,8 +51,8 @@ class ModelAdminTemplate(IndexView):
         filter_list = {
             'submission_date__range': (drf__submission_date__gte,
                                        drf__submission_date__lte)
-            if drf__submission_date__gte and
-            drf__submission_date__lte else None,
+            if drf__submission_date__gte and drf__submission_date__lte
+            else None,
             'is_read': is_read__exact,
             'is_shortlisted': is_shortlisted__exact,
             'is_winner': is_winner__exact
