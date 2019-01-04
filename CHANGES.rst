@@ -1,5 +1,8 @@
 CHANGE LOG
 ==========
+8.0.0
+-----
+-Upgrade version number to indicate backwards incompatibility
 
 7.1.0
 -----
