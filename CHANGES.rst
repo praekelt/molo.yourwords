@@ -1,5 +1,10 @@
 CHANGE LOG
 ==========
+
+8.1.0
+-----
+- Remove MoloPage
+
 8.0.0
 -----
 -Upgrade version number to indicate backwards incompatibility
